@@ -197,7 +197,6 @@ import java.io.PrintWriter;
     
    	
    /** La m�thode execute effectue un envoi de message par la source de la cha�ne de transmission du Simulateur. 
-   * @return les options explicites de simulation.
    *
    * @throws Exception si un probl�me survient lors de l'ex�cution
    *

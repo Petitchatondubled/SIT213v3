@@ -54,7 +54,6 @@ package information;
    
    /**
     * pour modifier le ième élément d'une information
-    * @return le ieme élément de l'information
     */
       public void setIemeElement(int i, T v) {
          this.content.set(i, v);

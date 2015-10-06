@@ -72,29 +72,16 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 	 */
 	private void decodeurNRZT() throws InformationNonConforme {
         int begin = 0 ; //pointeur pour le debut des echantillons d'un bit de l'information recue    
-        int k = 0;
         
         
         while(informationRecue.nbElements()>begin){ //On parcours l'information recue
-                for(int j=begin;j<nEchantillon+begin;j++) //On parcours les echantillons d' un bit
-                {
-                if(informationRecue.iemeElement(j)==ampMin)  
-                        {
-                                k++ ;
-                                if(k==nEchantillon){   //si toutes les echantillons vaut l'ampl min donc on a false sinon on a true
-                                        infoDecodee.add(false);
-                                        k=0;
-                                        break;
-                                }
-                        }
-                else 
-                        {
-                                k = 0;
+		if(informationRecue.iemeElement(begin+(nEchantillon/2)) == ampMax){ // on regarde � chaque fois au milieu du temps bit, si on a l'amplitude max ==> 1
                                 infoDecodee.add(true);
-                                break;
+                        }else
+			{ // sinon c'est 0
+                                infoDecodee.add(false);
                         }
-                }
-                begin = begin + nEchantillon; //on se place sur le bit suivant
+                        begin+=nEchantillon ; //on incremente i pour regarder le prochain bit
           }
    
 

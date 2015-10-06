@@ -86,7 +86,7 @@ public class Emetteur extends Transmetteur<Boolean,Float>{
                                 infoGeneree.add(y);
                         }
                         
-                        for(int k=(2*nb_tiers+reste) ; k < nEchantillon+1 ;k++){
+                        for(int k=(2*nb_tiers+reste) ; k < nEchantillon ;k++){
                                 //équation de la droite pour la descente
                                 float y =  (((float)((ampMax - ampMin)/(2*nb_tiers+reste-nEchantillon)))*(float)k)+ ampMin-((ampMax-ampMin)/(2*nb_tiers+reste-nEchantillon))*nEchantillon ;
                                 infoGeneree.add(y);

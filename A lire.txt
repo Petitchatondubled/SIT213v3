@@ -1,0 +1,12 @@
+**********************************
+Simulateur de transmission parfait
+**********************************
+
+-Pour lancer la compilation du simulateur et la génération du javadoc:
+ exécuter le script "compile.sh" dans "/src"
+
+-Pour lancer le jeu de test:
+ exécuter le script "TestSim.sh" dans "/src"
+
+-Pour lancer le jeu de test avec émétteur/récepteur analogique :
+ exécuter le script "TestSimAnalogique.sh" dans "/src"
