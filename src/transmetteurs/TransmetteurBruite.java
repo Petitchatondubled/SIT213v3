@@ -1,5 +1,7 @@
 package transmetteurs;
+import java.util.*;
 
+import destinations.DestinationInterface;
 import information.Information;
 import information.InformationNonConforme;
 
@@ -8,10 +10,24 @@ public class TransmetteurBruite extends Transmetteur<Float, Float> {
 	private float snr;
 	private Information<Float> infoBruitee;
 	
-	public TransmetteurBruite (float psnr)
+	/**
+	 * Constructeur de la classe Transmetteur bruite
+	 * @param snr rapport signal sur bruit voulu pour ce transmetteur
+	 */
+	public TransmetteurBruite (float snr)
 	{
-		snr = psnr;
-		infoBruitee = new Information<>();
+		this.snr = snr;
+	}
+	
+	public float calculPuissanceMoySignal (){
+		float sommeEchantillon = 0; //Contiendra la somme des échantillon au carré
+		float puissanceMoyenne = 0;
+		for (Iterator<Float> echantillon = informationRecue.iterator(); echantillon.hasNext();){
+			//On parcours l'ensemble des échantillons dl'information recue (avec la methode iterator voir classe information)
+			sommeEchantillon = sommeEchantillon + (echantillon.next()*echantillon.next()); 
+		}
+		puissanceMoyenne =  sommeEchantillon/informationRecue.nbElements();
+		return puissanceMoyenne;
 	}
 	
 	public void bruitBlancGaussien(){
@@ -22,16 +38,19 @@ public class TransmetteurBruite extends Transmetteur<Float, Float> {
 	}
 	
 	@Override
-	public void recevoir(Information<Float> information)
-			throws InformationNonConforme {
+	public void recevoir(Information<Float> information) throws InformationNonConforme {
+		informationRecue = information; //Réception de l'information 
+		// Appel methode Calcul de la puissance du signal recu.
 		// Appel methode Calcul du Bruit
-		// emettre()
-		
+		emettre(); //Emission de l'information bruitée vers le récepteur		
 	}
 
 	@Override
 	public void emettre() throws InformationNonConforme {
-		// TODO Auto-generated method stub
+		for (DestinationInterface<Float> destinationConnectee : destinationsConnectees) {
+            destinationConnectee.recevoir(informationEmise);
+            destinationConnectee.getInformationRecue();
+         } 
 		
 	}
 
