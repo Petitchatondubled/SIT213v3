@@ -1,5 +1,5 @@
 #!/bin/sh
-echo Compilation du code sources
+echo Compilation du code source
 javac -encoding ISO-8859-1 */*.java
 
 
