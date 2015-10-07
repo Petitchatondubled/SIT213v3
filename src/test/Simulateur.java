@@ -47,6 +47,10 @@ import java.io.PrintWriter;
       private float amplMin = 0.0f ;
    /** Indique si le simulateur utilise un signal analogique, par défaut c'est false*/  
       private boolean messageAnalogique = false ;
+   /** Rapport signal sur bruit desire dans le transmetteur, valeur par defaut : 0.0f*/
+   private boolean signalBruite = false ;
+   /** Rapport signal sur bruit desire dans le transmetteur, valeur par defaut : 0.0f*/
+   private float snr = 0.0f ;
    
    
    	
@@ -67,10 +71,7 @@ import java.io.PrintWriter;
    */   
       public  Simulateur(String [] args) throws ArgumentsException {
     	  
-    	  
-      	
       		analyseArguments(args);
-      	
       	
       }
    
@@ -187,6 +188,13 @@ import java.io.PrintWriter;
             	
             	
             }
+            else if (args[i].matches("-snr")){ //Definission du SNR
+            	i++; //on incremente i pour recuperer le parametre
+            	messageAnalogique = true ;// On indique au simulateur qu'on souhaite transmettre un signal analogique
+            	signalBruite = true;
+            	snr = new Float(args[i]) ;
+            	         	
+            }
              
             else throw new ArgumentsException("Option invalide :"+ args[i]); // Si aucun argument ne correspond à ceux définis
           
@@ -204,10 +212,10 @@ import java.io.PrintWriter;
       public void execute() throws Exception {
     	  
     	 
-    	 if(messageAnalogique){ //vérification si c'est un signal analogique qu'on souhaite simuler
-    		 if(messageAleatoire){ // verification si c'est une donnée aléatoire qu'on souhaite avoir
-    			 if(aleatoireAvecGerme){ // donnée aleatoire avec germe 
-            		 source = new SourceAleatoire(seed,nbBitsMess); // appel au bon constructeur 
+    	 if(messageAnalogique){ //si c'est un signal analogique qu'on souhaite simuler
+    		 if(messageAleatoire){ //si c'est une donne aleatoire qu'on souhaite avoir
+    			 if(aleatoireAvecGerme){ //si on veut une donnee aleatoire avec germe 
+            		 source = new SourceAleatoire(seed,nbBitsMess); // appel du bon constructeur 
             	 }else{
             		 source = new SourceAleatoire(nbBitsMess); 
             	 }
@@ -215,17 +223,17 @@ import java.io.PrintWriter;
     			 source = new SourceFixe(messageString);  
     		 }
     		 
-    		 //Creation de 4 sondes pour bien suivre et observer l'intégrité des données
-         	 SondeLogique sondeLogique1 = new SondeLogique("sonde_Logique_entrée",50);
+    		 //Creation de 4 sondes pour bien suivre et observer l'integrite des donnees
+         	 SondeLogique sondeLogique1 = new SondeLogique("sonde_Logique_entree",50);
          	 SondeLogique sondeLogique2 = new SondeLogique("Sonde_Logique_sortie", 50);
-         	 SondeAnalogique sondeAnalogique1 = new SondeAnalogique("Sonde_analogique_entrée") ;
+         	 SondeAnalogique sondeAnalogique1 = new SondeAnalogique("Sonde_analogique_entree") ;
          	 SondeAnalogique sondeAnalogique2 = new SondeAnalogique("Sonde_analogique_sortie") ;
          	 
          	 //creation de l'emetteur, indication des parametres de transformation
     		 Emetteur emetteur = new Emetteur(forme, nbEch, amplMax, amplMin) ;
     		 destination = new DestinationFinale() ;
     		 
-    		 //creation d'un émétteur
+    		 //creation d'un transmetteur
     		 TransmetteurParfaitAnalogique transmetteurParfaitAnalogique = new TransmetteurParfaitAnalogique() ;
     		 //Decodage
     		 Recepteur recepteur = new Recepteur(forme, nbEch, amplMax, amplMin);
@@ -243,7 +251,7 @@ import java.io.PrintWriter;
     		 recepteur.connecter(destination);
     		 source.emettre();
     		 
-    	 }else if(!messageAleatoire){
+    	 }else if(!messageAleatoire){ //Si c'est pas analogique 
         	source = new SourceFixe(messageString);
         	
         	SondeLogique sondeLogique1 = new SondeLogique("sondeDataEmis",50);
@@ -304,7 +312,6 @@ import java.io.PrintWriter;
       			nbBitsFaux++ ;
       		}	
       	}
-      		
       	if(nbElementsEmis != 0)	// on n'oublie pas la division par zero n'existe pas
          return (float)nbBitsFaux/ (float)nbElementsEmis;
       	else
