@@ -21,22 +21,22 @@ public class TransmetteurBruite extends Transmetteur<Float, Float> {
 	}
 	
 	/**
-	    * Calcul de la puissance moyenne du signal d'entrée a partir d'informationRecue
+	    * Calcul de la puissance moyenne du signal d'entrï¿½e a partir d'informationRecue
 	    * @return puissanceMoyenne puissance moyenne calculee du signal recu
 	    */
 	public void calculPuissanceMoySignal (){
-		float sommeEchantillon = 0; //Contiendra la somme des échantillon au carré
-		for (Iterator<Float> echantillon = informationRecue.iterator(); echantillon.hasNext();){
-			//On parcours l'ensemble des échantillons dl'information recue (avec la methode iterator voir classe information)
-			sommeEchantillon = sommeEchantillon + (echantillon.next()*echantillon.next()); 
+		float sommeEchantillon = 0; //Contiendra la somme des ï¿½chantillon au carrï¿½
+		for (Float echantillon : informationRecue){
+			//On parcours l'ensemble des ï¿½chantillons dl'information recue (avec la methode iterator voir classe information)
+			sommeEchantillon = sommeEchantillon + (echantillon*echantillon); 
 		}
 		puissanceMoySignalRecu =  sommeEchantillon/informationRecue.nbElements();
 		System.out.println("Puissance moyenne du signal recu :"+ puissanceMoySignalRecu);
 	}
 	
 	public void bruitBlancGaussien(){
-		float a1 = 0; //Première variable aléatoire 
-		float a2 = 0; //Seconde variable aléatoire 
+		float a1 = 0; //Premiï¿½re variable alï¿½atoire 
+		float a2 = 0; //Seconde variable alï¿½atoire 
 		float echantillonBruite = 0; //echantillon calcule (Signal d'entre + bruit)
 		
 		// Calcul de Pb en fonction du SNR et de Ps
@@ -44,8 +44,8 @@ public class TransmetteurBruite extends Transmetteur<Float, Float> {
 		puissanceMoyBruit = (float) Math.pow(puissanceMoyBruit, 10);	
 		
 		
-		// Boucle : Ajout du bruit calcule  chaque echantillon (voir formule)
-		for (Iterator<Float> echantillon = informationRecue.iterator(); echantillon.hasNext();){
+		// Boucle : Ajout du bruit calculeï¿½ chaque echantillon (voir formule)
+		for (Float echantillon : informationRecue){
 			a1 = (float) Math.random();
 			a2 = (float) Math.random();
 		    //Calcul d'un echantillon de bruit
@@ -59,13 +59,13 @@ public class TransmetteurBruite extends Transmetteur<Float, Float> {
 	
 	@Override
 	public void recevoir(Information<Float> information) throws InformationNonConforme {
-		informationRecue = information; //Réception de l'information 
+		informationRecue = information; //Rï¿½ception de l'information 
 		calculPuissanceMoySignal ();
 		bruitBlancGaussien();
 		informationEmise = informationRecue;
 		// Appel methode Calcul de la puissance du signal recu PS
 		// Appel methode Calcul du Bruit en fonction de PS et du SNR
-		emettre(); //Emission de l'information bruitée vers le récepteur		
+		emettre(); //Emission de l'information bruitï¿½e vers le rï¿½cepteur		
 	}
 
 	@Override
