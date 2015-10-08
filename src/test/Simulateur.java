@@ -5,12 +5,12 @@ import transmetteurs.*;
 import information.*;
 import visualisations.*;
 
-   import java.util.regex.*;
+ import java.util.regex.*;
 import java.util.*;
 import java.lang.Math;
 
 	
-   import java.io.FileInputStream;
+ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
