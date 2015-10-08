@@ -58,6 +58,8 @@ import java.io.PrintWriter;
       private			  Source <Boolean>  source = null;
    /** le  composant Transmetteur parfait logique de la chaine de transmission */
       private			  Transmetteur <Boolean, Boolean>  transmetteurLogique = null;
+   /** le  composant Transmetteur analogique de la chaine de transmission */
+      private			  Transmetteur <Float, Float>  transmetteurAnalogique = null;
    /** le  composant Destination de la chaine de transmission */
       private			  Destination <Boolean>  destination = null;
    	
@@ -234,20 +236,25 @@ import java.io.PrintWriter;
     		 destination = new DestinationFinale() ;
     		 
     		 //creation d'un transmetteur
-    		 TransmetteurParfaitAnalogique transmetteurParfaitAnalogique = new TransmetteurParfaitAnalogique() ;
+    		 if(signalBruite){
+    			 transmetteurAnalogique = new TransmetteurBruite(snr);
+    		 }else{
+    			 transmetteurAnalogique = new TransmetteurParfaitAnalogique() ;
+    		 }
+    		 
     		 //Decodage
     		 Recepteur recepteur = new Recepteur(forme, nbEch, amplMax, amplMin);
     		 
     		 if(affichage){
     			 source.connecter(sondeLogique1);
     			 emetteur.connecter(sondeAnalogique1);
-    			 transmetteurParfaitAnalogique.connecter(sondeAnalogique2);
+    			 transmetteurAnalogique.connecter(sondeAnalogique2);
     			 recepteur.connecter(sondeLogique2);
     		 }
     		 //execution des elements de la chaine de transmission
     		 source.connecter(emetteur);
-    		 emetteur.connecter(transmetteurParfaitAnalogique);
-    		 transmetteurParfaitAnalogique.connecter(recepteur);
+    		 emetteur.connecter(transmetteurAnalogique);
+    		 transmetteurAnalogique.connecter(recepteur);
     		 recepteur.connecter(destination);
     		 source.emettre();
     		 
