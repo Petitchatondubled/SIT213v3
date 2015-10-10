@@ -5,8 +5,13 @@ Simulateur de transmission parfait
 -Pour lancer la compilation du simulateur et la génération du javadoc:
  exécuter le script "compile.sh" dans "/src"
 
--Pour lancer le jeu de test:
+-Pour lancer le jeu de test Logique:
  exécuter le script "TestSim.sh" dans "/src"
 
 -Pour lancer le jeu de test avec émétteur/récepteur analogique :
  exécuter le script "TestSimAnalogique.sh" dans "/src"
+ 
+-Pour lancer le test du bruit par l'affichage d'un histogramme :
+exécuter le script "launchHistogramm.sh" dans "src"
+prend en argument "-var" pour la variance (1 par défaut)
+prend en argument "-nbEch" nombre d'échantillon à utiliser pour l'histogramme
