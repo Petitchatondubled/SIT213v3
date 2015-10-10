@@ -48,7 +48,7 @@ public class TransmetteurBruite extends Transmetteur<Float, Float> {
 		
 		// Calcul de Pb en fonction du SNR et de Ps
 		puissanceMoyBruit = (float) (10*Math.log10(puissanceMoySignalRecu)-snr);
-		puissanceMoyBruit = (float) Math.pow(10, puissanceMoyBruit);	
+		puissanceMoyBruit = (float) Math.pow(10, (puissanceMoyBruit/10));	
 		System.out.println("Puissance moyenne du bruit en fonction de Ps :"+ puissanceMoyBruit);
 		
 		// Boucle : Ajout du bruit calcule� chaque echantillon (voir formule)
