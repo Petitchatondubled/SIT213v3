@@ -160,7 +160,6 @@ public class Emetteur extends Transmetteur<Boolean,Float>{
             destinationConnectee.recevoir(infoGeneree); //puis on appel la méthode recevoir de l'instance distante et on lui transmet les données
             destinationConnectee.getInformationRecue();
          }   
-		informationEmise = infoGeneree ; // on met l'information emise dans cette variable (peut servir pour le TEB)
 	}
 
 }
