@@ -8,7 +8,7 @@ import information.InformationNonConforme;
 public class TransmetteurBruite extends Transmetteur<Float, Float> {
 
 	private float snr;
-	private float puissanceMoyBruit = 0;
+	public float puissanceMoyBruit = 0;
 	
 	/**
 	 * Constructeur de la classe Transmetteur bruite
@@ -37,7 +37,7 @@ public class TransmetteurBruite extends Transmetteur<Float, Float> {
 	}
 	
 	/**
-	    * Calcul du bruit blanc gaussien centré en fonction du snr
+	    * Calcul du bruit blanc gaussien centrÃ© en fonction du snr
 	    * @param snr rapport signal sur bruit
 	    * @param puissanceMoySignalRecu Puissance moyenne du signal recu calculee
 	    */
@@ -56,7 +56,7 @@ public class TransmetteurBruite extends Transmetteur<Float, Float> {
 		
 		// Boucle : Ajout du bruit calcule a chaque echantillon (voir formule)
 		for (Float echantillon : informationEmise){
-			a1 = (float) Math.random(); //a1 et a2 les des variables aléatoires du calcul
+			a1 = (float) Math.random(); //a1 et a2 les des variables alÃ©atoires du calcul
 			a2 = (float) Math.random();
 			
 		    //Calcul d'un echantillon de bruit			
@@ -75,7 +75,7 @@ public class TransmetteurBruite extends Transmetteur<Float, Float> {
 		
 		informationRecue = information; //Reception de l'information 
 		puissanceMoySignalRecu = calculPuissanceMoySignalRecu (informationRecue); //Calcul la puissance moyenne d'informationRecue
-		bruitBlancGaussien(snr,puissanceMoySignalRecu); //Calcul des échantillons de bruit blanc et l'ajoute au signal à émettre
+		bruitBlancGaussien(snr,puissanceMoySignalRecu); //Calcul des Ã©chantillons de bruit blanc et l'ajoute au signal Ã  Ã©mettre
 		emettre(); //Emission de l'information bruitee vers le recepteur		
 	}
 	/**
