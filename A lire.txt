@@ -1,5 +1,5 @@
 **********************************
-Simulateur de transmission parfait
+Simulateur de transmission
 **********************************
 
 -Pour lancer la compilation du simulateur et la génération du javadoc:
@@ -10,8 +10,22 @@ Simulateur de transmission parfait
 
 -Pour lancer le jeu de test avec émétteur/récepteur analogique :
  exécuter le script "TestSimAnalogique.sh" dans "/src"
- 
+
+-Pour lancer le jeu de test avec un transmetteur bruité :
+ exécuter le script "TestBruit.sh" dans "/src" 
+
 -Pour lancer le test du bruit par l'affichage d'un histogramme :
 exécuter le script "launchHistogramm.sh" dans "src"
-prend en argument "-var" pour la variance (1 par défaut)
-prend en argument "-nbEch" nombre d'échantillon à utiliser pour l'histogramme
+	prend en argument "-var" pour la variance (1 par défaut)
+	prend en argument "-nbEch" nombre d'échantillon à utiliser pour l'histogramme
+
+-Pour lancer les tests unitaires du simulateur et le transmetteur bruite
+exécuter le script "launchTestUnit.sh" dans "src"
+
+-Pour lancer les simulations et tracer la courbe du BER en fonction du SNR
+éxécuter le script "launchSimuBER.sh" dans "src"
+argument: "-n" : nombre de réalisation, (par défaut 1000)
+          "-snr" : snr de départ, (par défaut -20)
+          "-snrfreq" :Pas du snr (par défaut 0.1)
+	  "-nb": nombre de bits envoyées (par défaut 100)
+	  "-seed" germe pour toujours avoir le même nombre aléatoire (par défaut 5)

@@ -12,7 +12,7 @@ public class courbeTEB {
 	    public static void main(final String[] args) throws Exception {//main pour lancer la simulation
 	    	SondeAnalogique s1 = new SondeAnalogique("BER/SNR");  //sonde pour l'affichage
 	    	Simulateur  simu = null;  //simulateur pour la simu
-	    	double nbTest = 100;  //nombre de réalisation (par défaut 100)
+	    	double nbTest = 1000;  //nombre de réalisation (par défaut 100)
 	    	float snr = -20;  //snr de départ (par defaut -20)
 		float freqsnr = 0.1f; //Pas du snr (par dedfaut 0.1)
 	    	float ber = 0.0f; 
@@ -46,5 +46,6 @@ public class courbeTEB {
 	    }
 	    
 	}
+
 
 
