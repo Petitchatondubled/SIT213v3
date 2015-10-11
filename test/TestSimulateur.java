@@ -100,5 +100,6 @@ public class TestSimulateur {
 		Simulateur.main(args2);
 		String args3[] = {"-mess","1425","-s"};
 		Simulateur.main(args3);
+		
 	}
 }
