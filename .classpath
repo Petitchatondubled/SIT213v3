@@ -8,5 +8,7 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="C:/Users/bendaoud/workspace/SIT213/jcommon-1.0.23.jar"/>
+	<classpathentry kind="lib" path="C:/Users/bendaoud/workspace/SIT213/jfreechart-1.0.19.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
