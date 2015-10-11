@@ -46,7 +46,7 @@ public class NormalDistribution extends ApplicationFrame {
      */
     public static void main(final String[] args) {
 
-        final NormalDistributionDemo demo = new NormalDistributionDemo("Normal Distribution");
+        final NormalDistribution demo = new NormalDistribution("Normal Distribution");
         demo.pack();
         RefineryUtilities.centerFrameOnScreen(demo);
         demo.setVisible(true);

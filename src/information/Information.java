@@ -45,6 +45,7 @@ package information;
    
    /**
     * pour renvoyer un élément d'une information
+	* @param i index de l'information
     * @return le ieme élément de l'information
     */
       public T iemeElement(int i) {
@@ -54,6 +55,8 @@ package information;
    
    /**
     * pour modifier le ième élément d'une information
+	* @param i index de l'information
+	* @param v valeur de l'information
     */
       public void setIemeElement(int i, T v) {
          this.content.set(i, v);

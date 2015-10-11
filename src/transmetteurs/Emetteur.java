@@ -38,7 +38,7 @@ public class Emetteur extends Transmetteur<Boolean,Float>{
 
 	/**
 	 * Permet de transformer un signal logique en signal analogique de type NRZ
-	 * @throws InformationNonConforme 
+	 * @throws InformationNonConforme si Information non conforme
 	 */
 	public void transformateurNRZ() throws InformationNonConforme{
 		
@@ -60,7 +60,7 @@ public class Emetteur extends Transmetteur<Boolean,Float>{
 	
 	/**
 	 * Permet de transformer un signal logique en signal analogique de type NRZT
-	 * @throws InformationNonConforme
+	 * @throws InformationNonConforme si Information non conforme
 	 */
 
 	private void transformateurNRZT() throws InformationNonConforme {

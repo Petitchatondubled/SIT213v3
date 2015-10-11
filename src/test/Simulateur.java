@@ -64,8 +64,8 @@ import java.io.PrintWriter;
       private			  Destination <Boolean>  destination = null;
    	
    
-   /** Le constructeur de Simulateur construit une cha�ne de transmission compos�e d'une Source <Boolean>, d'une Destination <Boolean> et de Transmetteur(s) [voir la m�thode analyseArguments]...  
-   * <br> Les diff�rents composants de la cha�ne de transmission (Source, Transmetteur(s), Destination, Sonde(s) de visualisation) sont cr��s et connect�s.
+   /** Le constructeur de Simulateur construit une chaine de transmission composee d'une Source Boolean, d'une Destination Boolean et de Transmetteur(s) [voir la m�thode analyseArguments]...  
+   * <br> Les diff�rents composants de la cha�ne de transmission (Source, Transmetteur(s), Destination, Sonde(s) de visualisation) sont crees et connect�s.
    * @param args le tableau des diff�rents arguments.
    *
    * @throws ArgumentsException si un des arguments est incorrect

@@ -21,6 +21,7 @@ public class TransmetteurBruite extends Transmetteur<Float, Float> {
 	
 	/**
 	    * Calcul de la puissance moyenne du signal d'entree a partir d'informationRecue
+		* @param informationRecue information recue pour la generation du bruit
 	    * @return puissanceMoyenne puissance moyenne calculee du signal recu
 	    */
 	public float calculPuissanceMoySignalRecu (Information<Float> informationRecue){

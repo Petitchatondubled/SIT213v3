@@ -3,7 +3,6 @@ package test;
 import org.jfree.ui.RefineryUtilities;
 
 import information.Information;
-import visualisations.BarChart_AWT;
 
 public class histogramm {
 
