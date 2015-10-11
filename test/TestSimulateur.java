@@ -89,7 +89,15 @@ public class TestSimulateur {
 		simulateur3.execute();
 		assertEquals((float)0,simulateur3.calculTauxErreurBinaire(),0.0000f);
 		
+		String args4[] = {"-mess","541","-seed","1451","-s","-form","NRZ","-snr","-50"};
+		Simulateur simulateur4= new Simulateur(args4);
+		simulateur4.execute();
+		assertTrue(simulateur4.calculTauxErreurBinaire()>0.4);
 		
+		String args5[] = {"-mess","541","-seed","1451","-s","-form","NRZ","-snr","50"};
+		Simulateur simulateur5= new Simulateur(args5);
+		simulateur5.execute();
+		assertTrue(simulateur5.calculTauxErreurBinaire()<0.0001);
 	}
 	
 	@Test
