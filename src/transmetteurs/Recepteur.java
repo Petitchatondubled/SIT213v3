@@ -32,7 +32,7 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 
 	/**
 	 * Permet de transformer un signal analogique de type NRZ ou NRZT en un signal logique
-	 * @throws InformationNonConforme
+	 * @throws InformationNonConforme Information non conforme
 	 */
 	public void decodeurNRZ_NRZT() throws InformationNonConforme{
 		
