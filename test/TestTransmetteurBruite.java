@@ -40,7 +40,7 @@ public class TestTransmetteurBruite {
 	}
 
 	/**
-	 * Test method for {@link transmetteurs.TransmetteurBruite#calculPuissanceMoySignal()}.
+	 * Test method pour la méthode qui calcule la puissance moyenne du signal
 	 */
 	@Test
 	public void testCalculPuissanceMoySignal() {
@@ -54,7 +54,7 @@ public class TestTransmetteurBruite {
 		info.add(0.0f);
 		assertEquals(6.0f,transmetteur.calculPuissanceMoySignalRecu(info),0.0f);
 		
-		//Si le signal re�u est nul
+		//Si le signal reçu est nul
 		info =  new Information<Float>();
 		info.add(0.0f);
 		info.add(0.0f);
@@ -63,7 +63,7 @@ public class TestTransmetteurBruite {
 		info.add(0.0f);
 		assertEquals(0.0f,transmetteur.calculPuissanceMoySignalRecu(info),0.0f);
 		
-		//Si le signal re�u est tr�s grand
+		//Si le signal reçu est trés grand
 		info =  new Information<Float>();
 		int i=0;
 		for(i=0;i<10000;i++){
@@ -74,13 +74,13 @@ public class TestTransmetteurBruite {
 	}
 
 	/**
-	 * Test method for {@link transmetteurs.TransmetteurBruite#bruitBlancGaussien()}.
-	 * @throws InformationNonConforme 
+	 * Test method pour la méthode qui génére le bruit gaussien
+	 * @throws InformationNonConforme information non conforme
 	 */
 	@Test
 	public void testBruitBlancGaussien() throws InformationNonConforme {
 		
-		//Si le bruit est �quivalent au signal
+		//Si le bruit est équivalent au signal
 		TransmetteurBruite transmetteur = new TransmetteurBruite(0.0f);
 		Information<Float> info =  new Information<Float>();
 		for(int i=0;i<400;i++){
