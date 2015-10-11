@@ -79,36 +79,32 @@ import java.io.PrintWriter;
    
    
    
-   /** La m�thode analyseArguments extrait d'un tableau de cha�nes de caract�res les diff�rentes options de la simulation. 
-   * Elle met � jour les attributs du Simulateur.
+   /** La mÃ©thode analyseArguments extrait d'un tableau de chaï¿œnes de caractÃšres les diffï¿œrentes options de la simulation. 
+   * Elle met Ã  jour les attributs du Simulateur.
    *
-   * @param args le tableau des diff�rents arguments.
-   * <br>
-   * <br>Les arguments autoris�s sont : 
-   * <br> 
+   * <br>  Les arguments autorisÃ©s sont : 
    * <dl>
-   * <dt> -mess m  </dt><dd> m (String) constitu� de 7 ou plus digits � 0 | 1, le message � transmettre</dd>
-   * <dt> -mess m  </dt><dd> m (int) constitu� de 1 � 6 digits, le nombre de bits du message "al�atoire" � transmettre</dd> 
+   * <dt> -mess m  </dt><dd> m (String) constituï¿œ de 7 ou plus digits Ã  0 | 1, le message Ã  transmettre</dd>
+   * <dt> -mess m  </dt><dd> m (int) constituï¿œ de 1 Ã  6 digits, le nombre de bits du message "alÃ©atoire" Ã  transmettre</dd> 
    * <dt> -s </dt><dd> utilisation des sondes d'affichage</dd>
-   * <dt> -seed v </dt><dd> v (int) d'initialisation pour les g�n�rateurs al�atoires</dd> 
-   * <br>
-   * <dt> -form f </dt><dd>  codage (String) RZ, NRZR, NRZT, la forme d'onde du signal � transmettre (RZ par d�faut)</dd>
-   * <dt> -nbEch ne </dt><dd> ne (int) le nombre d'�chantillons par bit (ne >= 6 pour du RZ, ne >= 9 pour du NRZT, ne >= 18 pour du RZ,  30 par d�faut))</dd>
-   * <dt> -ampl min max </dt><dd>  min (float) et max (float), les amplitudes min et max du signal analogique � transmettre ( min < max, 0.0 et 1.0 par d�faut))</dd> 
-   * <br>
+   * <dt> -seed v </dt><dd> v (int) d'initialisation pour les gÃ©nÃ©rateurs alÃ©atoires</dd> 
+   * <dt> -form f </dt><dd>  codage (String) RZ, NRZR, NRZT, la forme d'onde du signal Ã  transmettre (RZ par dï¿œfaut)</dd>
+   * <dt> -nbEch ne </dt><dd> ne (int) le nombre d'Ã©chantillons par bit (ne supÃ©rieur ou Ã©gale 6 pour du RZ, ne supÃ©rieur ou Ã©gale 9 pour du NRZT, ne supÃ©rieur ou Ã©gale 18 pour du RZ,  30 par dÃ©faut))</dd>
+   * <dt> -ampl min max </dt><dd>  min (float) et max (float), les amplitudes min et max du signal analogique Ã  transmettre ( min infÃ©rieur Ã  max, 0.0 et 1.0 par dÃ©faut))</dd> 
+   * 
    * <dt> -snr s </dt><dd> s (float) le rapport signal/bruit en dB</dd>
-   * <br>
-   * <dt> -ti i dt ar </dt><dd> i (int) numero du trajet indirect (de 1 � 5), dt (int) valeur du decalage temporel du i�me trajet indirect 
-   * en nombre d'�chantillons par bit, ar (float) amplitude relative au signal initial du signal ayant effectu� le i�me trajet indirect</dd>
-   * <br>
+   * 
+   * <dt> -ti i dt ar </dt><dd> i (int) numero du trajet indirect (de 1 Ã  5), dt (int) valeur du decalage temporel du iÃ©me trajet indirect 
+   * en nombre d'Ã©chantillons par bit, ar (float) amplitude relative au signal initial du signal ayant effectuÃš le iÃ©me trajet indirect</dd>
+   * 
    * <dt> -transducteur </dt><dd> utilisation de transducteur</dd>
-   * <br>
-   * <dt> -aveugle </dt><dd> les r�cepteurs ne connaissent ni l'amplitude min et max du signal, ni les diff�rents trajets indirects (s'il y en a).</dd>
-   * <br>
+   * 
+   * <dt> -aveugle </dt><dd> les rï¿œcepteurs ne connaissent ni l'amplitude min et max du signal, ni les diffï¿œrents trajets indirects (s'il y en a).</dd>
+   * 
    * </dl>
-   * <br> <b>Contraintes</b> :
-   * Il y a des interd�pendances sur les param�tres effectifs. 
-   *
+   * <b>Contraintes</b> :
+   * Il y a des interdÃ©pendances sur les paramÃ©tres effectifs. 
+   * @param args le tableau des diffÃ©rents arguments.
    * @throws ArgumentsException si un des arguments est incorrect.
    *
    */   
