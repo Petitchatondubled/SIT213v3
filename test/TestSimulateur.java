@@ -28,14 +28,10 @@ public class TestSimulateur {
 
 	
 	/**
-	 * Cette classe test va tester les differentes exceptions que peut catcher la méthode argument
+	 * Cette classe test va tester les differentes exceptions que peut catcher la mÃ©thode argument
 	 * Pour ce faire, nous utilisons le constructeur Simulateur, qui utilise cette methode lors de la construction
 	 * d'une instance Simulateur
-<<<<<<< HEAD
-	 * @throws ArgumentsException
-=======
 	 * @throws ArgumentsException si erreur d'argument
->>>>>>> 7549b924e03e4f3f927b3790f741bebd65970601
 	 */
 	@Test
 	public void testAnalyseArguments1() throws ArgumentsException { 
@@ -72,13 +68,9 @@ public class TestSimulateur {
 
 	}
 	/**
-	 * Classe testant la méthode permettant de calculer le TEB
-	 * Puisque nous utilisons dans cette étape (1) un simulateur parfait, il doit nous renvoyer à chaque fois 0.
-<<<<<<< HEAD
-	 * @throws Exception 
-=======
+	 * Classe testant la mÃ©thode permettant de calculer le TEB
+	 * Puisque nous utilisons dans cette Ã©tape (1) un simulateur parfait, il doit nous renvoyer Ã  chaque fois 0.
 	 * @throws Exception exception du TEB
->>>>>>> 7549b924e03e4f3f927b3790f741bebd65970601
 	 */
 	@Test
 	public void testCalculTEB() throws Exception {
