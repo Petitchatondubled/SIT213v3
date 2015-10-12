@@ -233,7 +233,8 @@ import java.io.PrintWriter;
     		 
     		 //creation d'un transmetteur
     		 if(signalBruite){
-    			 transmetteurAnalogique = new TransmetteurBruite(snr);
+    			 if(aleatoireAvecGerme)	 transmetteurAnalogique = new TransmetteurBruite(snr,seed);
+    			 else {transmetteurAnalogique = new TransmetteurBruite(snr);}
     		 }else{
     			 transmetteurAnalogique = new TransmetteurParfaitAnalogique() ;
     		 }
