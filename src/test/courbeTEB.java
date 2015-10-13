@@ -19,11 +19,11 @@ public class courbeTEB {
 	    	
 	    	SondeAnalogique s1 = new SondeAnalogique("BER/SNR");  //sonde pour l'affichage
 	    	Simulateur  simu = null;  //simulateur pour la simu
-	    	double nbTest = 50;  //nombre de réalisation (par défaut 100)
-	    	float snr = -40;  //snr de départ (par defaut -20)
-	    	float freqsnr = 1.0f; //Pas du snr (par dedfaut 0.1)
+	    	double nbTest = 100;  //nombre de réalisation (par défaut 100)
+	    	float snr = -80;  //snr de départ (par defaut -20)
+	    	float freqsnr = 1f; //Pas du snr (par dedfaut 0.1)
 	    	float ber = 0.0f; 
-	    	int nbit = 10000;  //nombre de bit envoyé
+	    	int nbit = 99999;  //nombre de bit envoyé
 	    	int seed = 5;  //germe utilisé pour avoir le même msg aleatoire à chaque fois
 	    	String form = "RZ"; //form du signal (par defaut RZ)
 	    	Information<Float> berInfo = new Information<Float>(); //information contenant les valeur de BER
@@ -43,36 +43,28 @@ public class courbeTEB {
 	    	  	else throw new ArgumentsException("Valeur du parametre invalide : " + args[j]);
 	    	}
 	    	
-	    	
+	    	String form2 = "NRZ";
+	    	String form3 = "NRZT";
 	    	//lancement du simulateur en fonction du nbTest voulu en augmentant le snr à chaque fois avec un pas de freqsnr
 	    	for (int i=0; i<nbTest;i++){
+	    		
 		    	String arg1[]={"-snr",String.valueOf(snr),"-mess",String.valueOf(nbit),"-seed",String.valueOf(seed),"-form",String.valueOf(form)};
+		    	String arg2[]={"-snr",String.valueOf(snr),"-mess",String.valueOf(nbit),"-seed",String.valueOf(seed),"-form",String.valueOf(form2)};
+		    	String arg3[]={"-snr",String.valueOf(snr),"-mess",String.valueOf(nbit),"-seed",String.valueOf(seed),"-form",String.valueOf(form3)};
 				simu = new Simulateur(arg1);
+				//pour le signal RZ
 				simu.execute(); //execution du simulateur
 				ber = simu.calculTauxErreurBinaire();//recuperation du BER
 				berInfo.add(ber);
 				snrInfo.add(snr);
-				System.out.println(ber);
-				snr= (float) (snr+freqsnr);
-	    	}
-	    	form = "NRZ";
-	    	snr = -60 ;
-	    	for (int i=0; i<nbTest;i++){
-		    	String arg1[]={"-snr",String.valueOf(snr),"-mess",String.valueOf(nbit),"-seed",String.valueOf(seed),"-form",String.valueOf(form)};
-				simu = new Simulateur(arg1);
+				//Pour le signal NRZ
+				simu = new Simulateur(arg2);
 				simu.execute(); //execution du simulateur
 				ber = simu.calculTauxErreurBinaire();//recuperation du BER
 				berInfoNRZ.add(ber);
 				snrInfoNRZ.add(snr);
-				System.out.println(ber);
-				snr= (float) (snr+freqsnr);
-	    	}
-	    	
-	    	form = "NRZT";
-	    	snr = -60 ;
-	    	for (int i=0; i<nbTest;i++){
-		    	String arg1[]={"-snr",String.valueOf(snr),"-mess",String.valueOf(nbit),"-seed",String.valueOf(seed),"-form",String.valueOf(form)};
-				simu = new Simulateur(arg1);
+				//Pour le signal NRZT
+				simu = new Simulateur(arg3);
 				simu.execute(); //execution du simulateur
 				ber = simu.calculTauxErreurBinaire();//recuperation du BER
 				berInfoNRZT.add(ber);
@@ -81,24 +73,9 @@ public class courbeTEB {
 				snr= (float) (snr+freqsnr);
 	    	}
 	    	
-	    	Graphe graphe = new Graphe("TEB/SNR pour 1000 bits et 30 �chantillons");
 	    	
-//	    	Information<Float> xInfo = new Information<Float>();
-//	    	Information<Float> yInfo = new Information<Float>();
-//	    	
-//	    	for(int i=0;i<100;i++){
-//	    		xInfo.add(2.0f);
-//	    		yInfo.add((float)i);
-//	    		
-//	    	}
-//			graphe.createDataset("TEST", yInfo , xInfo);
-//			xInfo = new Information<Float>();
-//	    	yInfo = new Information<Float>();
-//			for(int i=0;i<100;i++){
-//	    		xInfo.add(5.0f);
-//	    		yInfo.add((float)i);
-//	    		
-//	    	}
+	    	
+	    	Graphe graphe = new Graphe("TEB/SNR pour "+nbit+" bits et 30 �chantillons");
 			graphe.createDataset("RZ",snrInfo, berInfo);
 			graphe.createDataset("NRZ",snrInfoNRZ, berInfoNRZ);
 			graphe.createDataset("NRZT",snrInfoNRZT, berInfoNRZT);
