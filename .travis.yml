@@ -3,4 +3,4 @@ jdk:
 - oraclejdk8
 - oraclejdk7
 - openjdk7
-script: chmod +x ./src/launchTestUnit.sh && ./src/launchTestUnit.sh
+script: chmod +x ./src/launchTestUnit.sh && cd src && ./launchTestUnit.sh
