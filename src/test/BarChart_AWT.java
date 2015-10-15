@@ -1,11 +1,14 @@
 package test;
+import java.awt.Font;
+
 import org.jfree.chart.ChartFactory;
 import sources.*;
 import destinations.*;
 import transmetteurs.*;
 import information.*;
 import org.jfree.chart.ChartPanel; 
-import org.jfree.chart.JFreeChart; 
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.CategoryDataset; 
 import org.jfree.data.category.DefaultCategoryDataset; 
@@ -19,57 +22,100 @@ public class BarChart_AWT extends ApplicationFrame
       super( applicationTitle );        
       JFreeChart barChart = ChartFactory.createBarChart(
          chartTitle,           
-         "Puissance de bruit",            
+         "",            
          "Nb Echantillon",            
          createDataset(info),          
-         PlotOrientation.VERTICAL,           
+         PlotOrientation.HORIZONTAL,           
          true, true, false);
+     
          
       ChartPanel chartPanel = new ChartPanel( barChart );        
-      chartPanel.setPreferredSize(new java.awt.Dimension( 360 , 367 ) );        
+      chartPanel.setPreferredSize(new java.awt.Dimension( 1000 , 1500 ) );        
       setContentPane( chartPanel ); 
+      CategoryPlot plot = barChart.getCategoryPlot();
+      Font font3 = new Font("Dialog", Font.PLAIN, 9); 
+      plot.getDomainAxis().setLabelFont(font3);
+      plot.getRangeAxis().setLabelFont(font3);
    }
    private CategoryDataset createDataset(Information<Float> infoRecue )
    {
-      final String bar = "Puissance de bruit";        
-      float ncq = 0.0f;
-      float nqt = 0.0f;
-      float ntd = 0.0f;
-      float ndu = 0.0f;
-      float nuz = 0.0f;
-      float zu = 0.0f;
-      float ud = 0.0f;
-      float dt = 0.0f;
-      float tq = 0.0f;
-      float qc = 0.0f;
-     
+      final String bar = "Bruit généré";
+      double[][][] val = new double[1000000][10][2];
+      int compteur=0;
+      for (int i=0;i<val.length;i++)
+      { 
+    	  for(int j=0;j<10;j++) for(int h=0;h<2;h++)val[i][j][h]=0;
+      }
       final DefaultCategoryDataset dataset = new DefaultCategoryDataset();  
+      
+      float temp = 0.0f;
       for(Float test:infoRecue)
       {
-    	  if(-5<test&& test<-4)  ncq++;
-    	  else if (-4<test&& test<-3)  nqt++;
-    	  else if (-3<test&& test<-2)  ntd++;
-    	  else if (-2<test&& test<-1)  ndu++;
-    	  else if (-1<test&& test<0)  nuz++;
-    	  else if (0<test&& test<1)  zu++;
-    	  else if (1<test&& test<2)  ud++;
-    	  else if (2<test&& test<3)  dt++;
-    	  else if (3<test&& test<4)  tq++;
-    	  else if (4<test&& test<5)  qc++;
+    	temp = test;
+    	if(test >0){
+    		if(test.intValue()==test)
+    		{
+    			val[Math.abs(test.intValue())][0][0]++;
+    		}
+    		else
+    		{
+    			temp = (float) (temp - 0.1);
+    			while(test.intValue()<=temp)
+    				{
+    					compteur++;
+    					temp = (float) (temp - 0.1);
+    				}
+    			val[Math.abs(test.intValue())][compteur][0]++;
+    			compteur = 0;
+    		}
+    	}else
+    	{
+    		if(test.intValue()==test)
+    		{
+    			val[Math.abs(test.intValue())][0][1]++;
+    		}
+    		else
+    		{
+    			temp = (float) (temp + 0.1);
+    			while(test.intValue()>=temp)
+    				{
+    					compteur++;
+    					temp = (float) (temp + 0.1);
+    				}
+    			val[Math.abs(test.intValue())][compteur][1]++;
+    			compteur = 0;
+    		}
+    	}
       }
-      dataset.addValue( ncq, bar, "-5   -4" );
-      dataset.addValue( nqt, bar, "-4   -3" );
-      dataset.addValue( ntd, bar, "-3   -2" );
-      dataset.addValue( ndu, bar, "-1   0" );
-      dataset.addValue( nuz, bar, "0   1" );
-      dataset.addValue( zu, bar, "0   1" );
-      dataset.addValue( ud, bar, "1   2" );
-      dataset.addValue( dt, bar, "2   3" );
-      dataset.addValue( tq, bar, "3   4" );
-      dataset.addValue( qc, bar, "4   5" );
-      
-      
-
+    	
+      for (int i=val.length-1;i>=0;i--)
+      {
+    	 for(int j=9;j>=0;j--)
+    	 {
+    		 for(int h=0;h<2;h++){
+    		 if(val[i][j][h] != 0)
+    		 {
+    			 if(h ==1)
+    				 dataset.addValue( val[i][j][h], bar,"-"+Integer.toString(i)+"."+Integer.toString(j));
+    		 }
+    	 }
+    	
+      }
+    	 }
+      for (int i =0;i<val.length;i++)
+      {
+    	 for(int j=0;j<10;j++)
+    	 {
+    		 for(int h=0;h<2;h++){
+    		 if(val[i][j][h] != 0)
+    		 {
+    			 if(h ==0)
+    				 dataset.addValue( val[i][j][h], bar, Integer.toString(i)+"."+Integer.toString(j));
+    		 }
+    	 }
+    	
+      }
+    	 }
       return dataset; 
    }
    
