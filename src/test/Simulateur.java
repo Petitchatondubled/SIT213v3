@@ -52,6 +52,11 @@ import java.io.PrintWriter;
    /** Rapport signal sur bruit desire dans le transmetteur, valeur par defaut : 0.0f*/
    private float snr = 0.0f ;
    
+   //Attribut pour le signal bruité reel
+   private boolean signalBruiteTrajetsMult = false;
+   private float ar=0.0f;
+   private int dt = 0;
+   private int numTrajet=1;
    
    	
    /** le  composant Source de la chaine de transmission */
@@ -193,7 +198,17 @@ import java.io.PrintWriter;
             	snr = new Float(args[i]) ;
             	         	
             }
-             
+            else if (args[i].matches("-ti")){ //Définission du signal bruité avec trajet multiple
+              	i++; //on incremente i pour recuperer le parametre
+              	messageAnalogique = true ;// On indique au simulateur qu'on souhaite transmettre un signal analogique
+              	signalBruiteTrajetsMult = true;//Il s'agit d'un signal bruité à trajets multiples
+              	numTrajet=new Integer(args[i]);
+              	i++;
+              	dt=new Integer(args[i]);
+              	i++;
+              	ar=new Float(args[i]);
+                            	         	
+              } 
             else throw new ArgumentsException("Option invalide :"+ args[i]); // Si aucun argument ne correspond Ã  ceux dÃ©finis
           
          }
@@ -232,13 +247,15 @@ import java.io.PrintWriter;
     		 destination = new DestinationFinale() ;
     		 
     		 //creation d'un transmetteur
-    		 if(signalBruite){
+    		 if(signalBruite && signalBruiteTrajetsMult==false){
     			 if(aleatoireAvecGerme)	 transmetteurAnalogique = new TransmetteurBruite(snr,seed);
     			 else {transmetteurAnalogique = new TransmetteurBruite(snr);}
+    		 }
+    			 else if(signalBruiteTrajetsMult){
+       			 transmetteurAnalogique = new TransmetteurBruite(snr,ar,dt,numTrajet);
     		 }else{
     			 transmetteurAnalogique = new TransmetteurParfaitAnalogique() ;
     		 }
-    		 
     		 //Decodage
     		 Recepteur recepteur = new Recepteur(forme, nbEch, amplMax, amplMin);
     		 
@@ -298,8 +315,7 @@ import java.io.PrintWriter;
          }
         		 
       	     	      
-      }
-   
+   }
    	   	
    	
    /** La mï¿½thode qui calcule le taux d'erreur binaire en comparant les bits du message ï¿½mis avec ceux du message reï¿½u.
