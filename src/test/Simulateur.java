@@ -54,9 +54,11 @@ import java.io.PrintWriter;
    
    //Attribut pour le signal bruité reel
    private boolean signalBruiteTrajetsMult = false;
-   private float ar=0.0f;
-   private int dt = 0;
-   private int numTrajet=1;
+   private int nbTraj= 1; //nombre de trajectoires souhaités
+   private LinkedList<Integer> dt= new LinkedList<Integer>();//liste des retards
+   private LinkedList<Float> ar= new LinkedList<Float>();//liste des atténuations
+   private LinkedList<Integer> numTrajet= new LinkedList<Integer>();//liste des trajectoires
+
    
    	
    /** le  composant Source de la chaine de transmission */
@@ -202,12 +204,24 @@ import java.io.PrintWriter;
               	i++; //on incremente i pour recuperer le parametre
               	messageAnalogique = true ;// On indique au simulateur qu'on souhaite transmettre un signal analogique
               	signalBruiteTrajetsMult = true;//Il s'agit d'un signal bruité à trajets multiples
-              	numTrajet=new Integer(args[i]);
+              	int z=i;
+               	nbTraj= new Integer(args[z]);//Le nombre de trajectoire souhaitée
+        		i++;
+              	for (int j=0; j<nbTraj; j++){
+            	
+            	
+                numTrajet.add(new Integer(args[i]));
+              	if(numTrajet.get(j)!=j+1){ 
+            		throw new ArgumentsException("Valeur du parametre -ti invalide : veuillez initialiser la trajectoire "+(j+1) );}
+            	else {
               	i++;
-              	dt=new Integer(args[i]);
+              	dt.add(new Integer(args[i]));
               	i++;
-              	ar=new Float(args[i]);
-                            	         	
+              	ar.add(new Float(args[i]));
+            	}
+              	i++;        	
+              	}	
+              	i--;
               } 
             else throw new ArgumentsException("Option invalide :"+ args[i]); // Si aucun argument ne correspond Ã  ceux dÃ©finis
           
@@ -216,7 +230,6 @@ import java.io.PrintWriter;
       }
      
     
-   	
    /** La mï¿½thode execute effectue un envoi de message par la source de la chaï¿½ne de transmission du Simulateur. 
    *
    * @throws Exception si un problï¿½me survient lors de l'exï¿½cution
