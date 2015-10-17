@@ -10,7 +10,11 @@ public class TransmetteurBruite extends Transmetteur<Float, Float> {
 	private float snr;
 	public float puissanceMoyBruit = 0;
 	private int seed = -1; //germe du random si -1 ça veut dire qu'il n'y a pas de germe
-	
+	private int dt;//liste des retards
+	private float ar ;//liste des atténuations
+	private int numTrajet;//liste des trajectoires
+	boolean signalBruiteTrajetMult = false ;
+	boolean signalBruite = false ;
 	/**
 	 * Constructeur de la classe Transmetteur bruite
 	 * @param snr rapport signal sur bruit voulu pour ce transmetteur
@@ -19,18 +23,58 @@ public class TransmetteurBruite extends Transmetteur<Float, Float> {
 	{
 		this.snr = snr;
 	}
-	
+	//Constructeur pour utiliser un bruit à trajets multiples
+	public TransmetteurBruite ( float snr, float ar,int dt, int numTrajet)
+	{
+		this.signalBruiteTrajetMult = true ;
+		this.snr=snr;
+		this.ar=ar;
+		this.dt=dt;
+		this.numTrajet=numTrajet;
+		this.signalBruite = true ;
+	}
 	/**
 	 * Constructeur de la classe Transmetteur bruiteavec seed
 	 * @param snr rapport signal sur bruit voulu pour ce transmetteur
 	 * @param seed germe de random
 	 */
+	
 	public TransmetteurBruite (float snr,int sd)
 	{
 		this.snr = snr;
 		this.seed = sd;
+		signalBruite = true ;
 	}
 	
+	public TransmetteurBruite(float snr, Integer seed, int numTraj, int dt,
+			float ar) {
+		
+		this.signalBruiteTrajetMult = true ;
+		this.snr=snr;
+		this.ar=ar;
+		this.dt=dt;
+		this.numTrajet=numTraj;
+		this.seed = seed;
+		signalBruite = true ;
+	}
+	public TransmetteurBruite(float snr, int numTraj, int dt, float ar) {
+		
+		this.signalBruiteTrajetMult = true ;
+		this.snr=snr;
+		this.ar=ar;
+		this.dt=dt;
+		this.numTrajet=numTraj;
+		signalBruite = true ;
+		
+	}
+	public TransmetteurBruite(int numTraj, int dt, float ar) {
+		this.signalBruiteTrajetMult = true ;
+		this.ar=ar;
+		this.dt=dt;
+		this.numTrajet=numTraj;
+		signalBruite = false ;
+		
+	}
 	/**
 	    * Calcul de la puissance moyenne du signal d'entree a partir d'informationRecue
 		* @param informationRecue information recue pour la generation du bruit
@@ -53,7 +97,7 @@ public class TransmetteurBruite extends Transmetteur<Float, Float> {
 	    * @param snr rapport signal sur bruit
 	    * @param puissanceMoySignalRecu Puissance moyenne du signal recu calculee
 	    */
-	public void bruitBlancGaussien(float snr,float puissanceMoySignalRecu, int sd){
+	public float bruitBlancGaussien(float snr,float puissanceMoySignalRecu, int sd){
 		float a1 = 0.0f;
 		float a2 = 0.0f;
 		Random g1 = null;
@@ -71,8 +115,7 @@ public class TransmetteurBruite extends Transmetteur<Float, Float> {
 		float echantillonBruite = 0; //echantillon calcule (Signal d'entre + bruit)
 		int i =0; 
 		
-		informationEmise = informationRecue; //Copie du signal recu dans informationEmise
-		
+		 
 		// Calcul de Pb en fonction du SNR et de Ps
 		puissanceMoyBruit = (float) (10*Math.log10(puissanceMoySignalRecu)-snr);
 		puissanceMoyBruit = (float) Math.pow(10, (puissanceMoyBruit/10));	
@@ -88,19 +131,116 @@ public class TransmetteurBruite extends Transmetteur<Float, Float> {
 			informationEmise.setIemeElement(i, informationEmise.iemeElement(i)+ echantillonBruite);
 			i++; 
 		}
+		return echantillonBruite;
+	}
+	
+	
+	public Information<Float> decalageInfo(Information<Float> info,int dt,float att){
+		
+		Information<Float> infoCreated = new Information<Float>();
+		for(int i =0;i<dt;i++){
+			infoCreated.add(0.0f);
+		}
+		for(float val : info){
+			infoCreated.add(att*val);
+		}
+		return infoCreated ;
+	}
+	
+	public void bruitMultiTrajet(){
+		
+		Information<Float> infoGeneree = decalageInfo(informationRecue, dt,ar);
+
+		for(int i=0;i<dt;i++){
+			informationRecue.add(0.0f);
+		}
+		//On initialise la chaîne à émettre
+		informationEmise = new Information<Float>();
+		
+		int i = 0 ;
+		for(float val : informationRecue){
+			informationEmise.add((float)(infoGeneree.iemeElement(i)+val));
+			i++;
+		}
 		
 	}
+//	public void bruitTrajetsMultiples(LinkedList<Float> ar, LinkedList<Integer> dt, LinkedList<Integer> numTrajet){
+//		//Stockage de l'information reçue dans l'information à émettre
+//		informationEmise = informationRecue; 
+//		
+//		//Déclaration de la trajectoire et ajout de l'informatino reçue
+//		Information<Float> trajectoire = new Information<Float>();	
+//		for(Float f : informationRecue) trajectoire.add(f);
+//		
+//		//Calcul de la puissance moyenne du signal pour le bruit blanc Gaussien
+//		float puissanceMoySignalRecu=calculPuissanceMoySignalRecu (informationRecue);
+//		
+//	//Calcul des trajectoires indirects	
+//		//Création des décalages de chaque trajet indirect
+//		int c;
+//		for(c =0; c<dt.size(); c++ ){
+//			int retard = dt.get(c);
+//			for(int i=0; i<retard; i++){
+//				trajectoire.setIemeElement(i, 0.0f );
+//			}
+//			//Stockage de la trajectoire retardée dans la liste des trajets 
+//			trajet.add(numTrajet.get(c)-1,trajectoire);
+//		}
+//		//Ajout du signal d'origine après le décalage dt pout chaque trajectoire
+//		for(c =0; c<dt.size(); c++ ){
+//			int j =0;
+//			while(j<informationRecue.nbElements()-dt.get(c)){
+//				trajectoire.setIemeElement(j+dt.get(c), ar.get(c)*informationRecue.iemeElement(j) );
+//				j++;
+//			}
+//		//Ajout des trajectorie dans la liste des trajets
+//		trajet.add(numTrajet.get(c)-1,trajectoire);
+//		}
+//	
+//		//Ajout des trajectoires et du bruit au signal d'origine
+//		int k=0;		
+//		for (Float echantillon : informationEmise){
+//			for(c =0; c<dt.size(); c++ ){
+//			informationEmise.setIemeElement(k, informationRecue.iemeElement(k)+ trajet.get(numTrajet.get(c)-1).iemeElement(k)+bruitBlancGaussien(snr,puissanceMoySignalRecu,seed));
+//			}
+//			k++;
+//		}
+//	}
+
 	/**
 	    * Recoit l'information de l'emetteur
 	    */
 	@Override
 	public void recevoir(Information<Float> information) throws InformationNonConforme {
-		float puissanceMoySignalRecu = 0; 
 		
-		informationRecue = information; //Reception de l'information 
-		puissanceMoySignalRecu = calculPuissanceMoySignalRecu (informationRecue); //Calcul la puissance moyenne d'informationRecue
-		bruitBlancGaussien(snr,puissanceMoySignalRecu,seed); //Calcul des Ã©chantillons de bruit blanc et l'ajoute au signal Ã  Ã©mettre
-		emettre(); //Emission de l'information bruitee vers le recepteur		
+		informationRecue = information ;
+		
+		
+		if(signalBruiteTrajetMult && signalBruite){
+			float puissanceMoySignalRecu = calculPuissanceMoySignalRecu (informationRecue);
+			bruitMultiTrajet();
+			bruitBlancGaussien(snr,puissanceMoySignalRecu,seed); //Calcul des Ã©chantillons de bruit blanc et l'ajoute au signal Ã  Ã©mettre
+			emettre(); //Emission de l'information bruitee vers le recepteur
+		}else if(!signalBruite){
+			bruitMultiTrajet();
+			emettre(); //Emission de l'information bruitee vers le recepteur
+			
+		}else{
+			float puissanceMoySignalRecu = calculPuissanceMoySignalRecu (informationRecue);
+			informationEmise = informationRecue;
+			bruitBlancGaussien(snr,puissanceMoySignalRecu,seed); //Calcul des Ã©chantillons de bruit blanc et l'ajoute au signal Ã  Ã©mettre
+			emettre(); //Emission de l'information bruitee vers le recepteur
+		}
+		
+//		informationRecue = information; //Reception de l'information 
+//		puissanceMoySignalRecu = calculPuissanceMoySignalRecu (informationRecue); //Calcul la puissance moyenne d'informationRecue
+//		if (signalBruiteTrajetMult){
+//			bruitTrajetsMultiples(ar, dt, numTrajet);
+//			emettre();
+//		}else{
+//		bruitBlancGaussien(snr,puissanceMoySignalRecu,seed); //Calcul des Ã©chantillons de bruit blanc et l'ajoute au signal Ã  Ã©mettre
+//		emettre(); //Emission de l'information bruitee vers le recepteur
+//		}
 	}
 	/**
 	    * Emet l'information bruitee

@@ -19,12 +19,12 @@ public class courbeTEB {
 	    	
 	    	
 	    	Simulateur  simu = null;  //simulateur pour la simu
-	    	double nbTest = 100;  //nombre de rÃ©alisation (par dÃ©faut 100)
-	    	float snr = -80;  //snr de dÃ©part (par defaut -20)
+	    	double nbTest = 100;  //nombre de réalisation (par défaut 100)
+	    	float snr = -80;  //snr de départ (par defaut -20)
 	    	float freqsnr = 1f; //Pas du snr (par dedfaut 0.1)
 	    	float ber = 0.0f; 
-	    	int nbit = 10000;  //nombre de bit envoyÃ©
-	    	int seed = 5;  //germe utilisÃ© pour avoir le mÃªme msg aleatoire Ã  chaque fois
+	    	int nbit = 10000;  //nombre de bit envoyé
+	    	int seed = 5;  //germe utilisé pour avoir le même msg aleatoire à chaque fois
 	    	
 	    	Information<Float> berInfo = new Information<Float>(); //information contenant les valeur de BER
 	    	Information<Float> snrInfo = new Information<Float>();
@@ -36,7 +36,7 @@ public class courbeTEB {
 	    	String form  ="30" ;
 	    	String form2 = "300";
 	    	String form3 = "3000";
-	    	//lancement du simulateur en fonction du nbTest voulu en augmentant le snr Ã  chaque fois avec un pas de freqsnr
+	    	//lancement du simulateur en fonction du nbTest voulu en augmentant le snr à chaque fois avec un pas de freqsnr
 	    	for (int i=0; i<nbTest;i++){
 	    		
 		    	String arg1[]={"-snr",String.valueOf(snr),"-mess",String.valueOf(nbit),"-seed",String.valueOf(seed),"-nbEch",String.valueOf(form)};
@@ -83,6 +83,3 @@ public class courbeTEB {
 	    }
 	    
 	}
-
-
-

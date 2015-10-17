@@ -1,5 +1,6 @@
 package test ;
-   import sources.*;
+
+import sources.*;
 import destinations.*;
 import transmetteurs.*;
 import information.*;
@@ -52,6 +53,12 @@ import java.io.PrintWriter;
    /** Rapport signal sur bruit desire dans le transmetteur, valeur par defaut : 0.0f*/
    private float snr = 0.0f ;
    
+   //Attribut pour le signal bruit� reel
+   private boolean signalBruiteTrajetsMult = false;
+   private int numTraj= 1; //nombre de trajectoires souhait�s
+   private int dt = 0 ;
+   private float ar = 0.0f ;
+
    
    	
    /** le  composant Source de la chaine de transmission */
@@ -80,21 +87,21 @@ import java.io.PrintWriter;
    
    
    /** La mÃ©thode analyseArguments extrait d'un tableau de chaï¿œnes de caractÃšres les diffï¿œrentes options de la simulation. 
-   * Elle met Ã  jour les attributs du Simulateur.
+   * Elle met Ã�  jour les attributs du Simulateur.
    *
    * <br>  Les arguments autorisÃ©s sont : 
    * <dl>
-   * <dt> -mess m  </dt><dd> m (String) constituï¿œ de 7 ou plus digits Ã  0 | 1, le message Ã  transmettre</dd>
-   * <dt> -mess m  </dt><dd> m (int) constituï¿œ de 1 Ã  6 digits, le nombre de bits du message "alÃ©atoire" Ã  transmettre</dd> 
+   * <dt> -mess m  </dt><dd> m (String) constituï¿œ de 7 ou plus digits Ã�  0 | 1, le message Ã�  transmettre</dd>
+   * <dt> -mess m  </dt><dd> m (int) constituï¿œ de 1 Ã�  6 digits, le nombre de bits du message "alÃ©atoire" Ã�  transmettre</dd> 
    * <dt> -s </dt><dd> utilisation des sondes d'affichage</dd>
    * <dt> -seed v </dt><dd> v (int) d'initialisation pour les gÃ©nÃ©rateurs alÃ©atoires</dd> 
-   * <dt> -form f </dt><dd>  codage (String) RZ, NRZR, NRZT, la forme d'onde du signal Ã  transmettre (RZ par dï¿œfaut)</dd>
+   * <dt> -form f </dt><dd>  codage (String) RZ, NRZR, NRZT, la forme d'onde du signal Ã�  transmettre (RZ par dï¿œfaut)</dd>
    * <dt> -nbEch ne </dt><dd> ne (int) le nombre d'Ã©chantillons par bit (ne supÃ©rieur ou Ã©gale 6 pour du RZ, ne supÃ©rieur ou Ã©gale 9 pour du NRZT, ne supÃ©rieur ou Ã©gale 18 pour du RZ,  30 par dÃ©faut))</dd>
-   * <dt> -ampl min max </dt><dd>  min (float) et max (float), les amplitudes min et max du signal analogique Ã  transmettre ( min infÃ©rieur Ã  max, 0.0 et 1.0 par dÃ©faut))</dd> 
+   * <dt> -ampl min max </dt><dd>  min (float) et max (float), les amplitudes min et max du signal analogique Ã�  transmettre ( min infÃ©rieur Ã�  max, 0.0 et 1.0 par dÃ©faut))</dd> 
    * 
    * <dt> -snr s </dt><dd> s (float) le rapport signal/bruit en dB</dd>
    * 
-   * <dt> -ti i dt ar </dt><dd> i (int) numero du trajet indirect (de 1 Ã  5), dt (int) valeur du decalage temporel du iÃ©me trajet indirect 
+   * <dt> -ti i dt ar </dt><dd> i (int) numero du trajet indirect (de 1 Ã�  5), dt (int) valeur du decalage temporel du iÃ©me trajet indirect 
    * en nombre d'Ã©chantillons par bit, ar (float) amplitude relative au signal initial du signal ayant effectuÃš le iÃ©me trajet indirect</dd>
    * 
    * <dt> -transducteur </dt><dd> utilisation de transducteur</dd>
@@ -168,8 +175,8 @@ import java.io.PrintWriter;
             	i++ ;
             	amplMax = new Float(args[i]) ;
             	
-            	if(amplMin>=amplMax){ // on verifie que l'amplitude max est bien supérieur à la minimum, sinon exception
-            		throw new ArgumentsException("Valeur du parametre -ampl invalide : min doit être inférieur à max" );
+            	if(amplMin>=amplMax){ // on verifie que l'amplitude max est bien supérieur �  la minimum, sinon exception
+            		throw new ArgumentsException("Valeur du parametre -ampl invalide : min doit être inférieur �  max" );
             	}
             	
             	
@@ -180,7 +187,7 @@ import java.io.PrintWriter;
             	nbEch = new Integer(args[i]) ;
             	if(nbEch<=0){ // on verifie que l'utilisateur veut bien au moins un échantillon du signal
             		throw new ArgumentsException("Valeur du parametre -nbEch invalide : le nombre d'échantillon doit être positif" );
-            	}else if(nbEch<3 && (forme.equals("RZ") || forme.equals("NRZT"))){ // On oblige l'utilisateur à avoir au moins trois échantillons pour ces signaux (faisabilité)
+            	}else if(nbEch<3 && (forme.equals("RZ") || forme.equals("NRZT"))){ // On oblige l'utilisateur �  avoir au moins trois échantillons pour ces signaux (faisabilité)
             		throw new ArgumentsException("Valeur du parametre -nbEch invalide : pour le signal "+forme+" nous devons avoir au moins 3 échantillons" );
             	}
             	
@@ -193,15 +200,40 @@ import java.io.PrintWriter;
             	snr = new Float(args[i]) ;
             	         	
             }
-             
-            else throw new ArgumentsException("Option invalide :"+ args[i]); // Si aucun argument ne correspond à ceux définis
+            else if (args[i].matches("-ti")){ //D�finission du signal bruit� avec trajet multiple
+              	i++; //on incremente i pour recuperer le parametre
+              	messageAnalogique = true ;// On indique au simulateur qu'on souhaite transmettre un signal analogique
+              	signalBruiteTrajetsMult = true;//Il s'agit d'un signal bruit� � trajets multiples
+              	int z=i;
+               	numTraj= new Integer(args[z]);//Le nombre de trajectoire souhait�e
+        		i++;
+        		dt = new Integer(args[i]);
+        		i++;
+        		ar = new Float(args[i]);
+        		
+//              	for (int j=0; j<nbTraj; j++){
+//            	
+//            	
+//                numTrajet.add(new Integer(args[i]));
+//              	if(numTrajet.get(j)!=j+1){ 
+//            		throw new ArgumentsException("Valeur du parametre -ti invalide : veuillez initialiser la trajectoire "+(j+1) );}
+//            	else {
+//              	i++;
+//              	dt.add(new Integer(args[i]));
+//              	i++;
+//              	ar.add(new Float(args[i]));
+//            	}
+//              	i++;        	
+//              	}	
+//              	i--;
+              } 
+            else throw new ArgumentsException("Option invalide :"+ args[i]); // Si aucun argument ne correspond �  ceux définis
           
          }
       
       }
      
     
-   	
    /** La m�thode execute effectue un envoi de message par la source de la cha�ne de transmission du Simulateur. 
    *
    * @throws Exception si un probl�me survient lors de l'ex�cution
@@ -232,14 +264,42 @@ import java.io.PrintWriter;
     		 destination = new DestinationFinale() ;
     		 
     		 //creation d'un transmetteur
-    		 if(signalBruite){
-    			 if(aleatoireAvecGerme)	 transmetteurAnalogique = new TransmetteurBruite(snr,seed);
-    			 else {transmetteurAnalogique = new TransmetteurBruite(snr);}
-    		 }else{
-    			 transmetteurAnalogique = new TransmetteurParfaitAnalogique() ;
+    		 
+    		 if(signalBruite){//Si le signal est bruit� BBG
+    			 if(signalBruiteTrajetsMult){ //Si le signal est multi Trajets
+    				 if(aleatoireAvecGerme){ //Si le bruit blanc gaussien est gener�e avec une germe
+        				 transmetteurAnalogique = new TransmetteurBruite(snr,seed,numTraj,dt,ar);
+        			 }else {
+        				 transmetteurAnalogique = new TransmetteurBruite(snr,numTraj,dt,ar);
+        			 }
+    			 }else{
+    				 if(aleatoireAvecGerme){
+        				 transmetteurAnalogique = new TransmetteurBruite(snr,seed);
+        			 }else {
+        				 transmetteurAnalogique = new TransmetteurBruite(snr);
+        			 }
+    			 }
+    		 }else{//Si le signal n'est pas bruit� mais seulement contient un multiTrajets
+    			 if(signalBruiteTrajetsMult){
+    				 transmetteurAnalogique = new TransmetteurBruite(numTraj,dt,ar);
+    			 }else{
+    				 transmetteurAnalogique = new TransmetteurParfaitAnalogique();
+    			 }
     		 }
     		 
+//    		 if(signalBruite && !signalBruiteTrajetsMult){
+//    			 if(aleatoireAvecGerme){
+//    				 transmetteurAnalogique = new TransmetteurBruite(snr,seed);
+//    			 }else {
+//    				 transmetteurAnalogique = new TransmetteurBruite(snr);
+//    			 }
+//    		 }else if(signalBruiteTrajetsMult && signalBruite){
+//       			 transmetteurAnalogique = new TransmetteurBruite(snr,ar,dt,numTrajet);
+//    		 }else{
+//    			 transmetteurAnalogique = new TransmetteurParfaitAnalogique() ;
+//    		 }
     		 //Decodage
+    		 
     		 Recepteur recepteur = new Recepteur(forme, nbEch, amplMax, amplMin);
     		 
     		 if(affichage){
@@ -298,8 +358,7 @@ import java.io.PrintWriter;
          }
         		 
       	     	      
-      }
-   
+   }
    	   	
    	
    /** La m�thode qui calcule le taux d'erreur binaire en comparant les bits du message �mis avec ceux du message re�u.
@@ -309,6 +368,7 @@ import java.io.PrintWriter;
       public float  calculTauxErreurBinaire() {
       
       	int nbElementsEmis = source.getInformationEmise().nbElements() ; // on recupere le nombre d'elements émis
+      	System.out.println(source.getInformationEmise().nbElements());
         int nbBitsFaux = 0 ;
       	int i ;
       	for(i=0;i<nbElementsEmis;i++){
@@ -341,14 +401,14 @@ import java.io.PrintWriter;
             } 
       		
          try {
-            simulateur.execute();
-            float tauxErreurBinaire = simulateur.calculTauxErreurBinaire();
-            String s = "java  Simulateur  ";
-            for (int i = 0; i < args.length; i++) {
-         		s += args[i] + "  ";
-         	}
-            
-			System.out.println(s + "  =>   TEB : " + tauxErreurBinaire );
+             simulateur.execute();
+//            float tauxErreurBinaire = simulateur.calculTauxErreurBinaire();
+//            String s = "java  Simulateur  ";
+//            for (int i = 0; i < args.length; i++) {
+//         		s += args[i] + "  ";
+//         	}
+//            
+//			System.out.println(s + "  =>   TEB : " + tauxErreurBinaire );
          }
             catch (Exception e) {
                System.out.println(e);

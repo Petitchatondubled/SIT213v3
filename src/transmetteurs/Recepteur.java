@@ -15,6 +15,8 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 	private float ampMax ;
 	private float ampMin ;
 	private String forme ;
+	private float att ;
+	private int dt ;
 	/**
 	 * Constructeur de la classe Recepteur
 	 * @param form forme du signal analogique
@@ -30,6 +32,15 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 		forme = form ;
 	}
 
+	public Recepteur(String form,int nEch,float aMax,float aMin,int pdt,int patt){
+		
+		nEchantillon = nEch ;
+		ampMax = aMax ;
+		ampMin = aMin ;
+		forme = form ;
+		dt =pdt ;
+		att=patt;
+	}
 	/**
 	 * Permet de transformer un signal analogique de type NRZ ou NRZT en un signal logique
 	 * @throws InformationNonConforme Information non conforme
@@ -62,7 +73,8 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 		}		
 		
 	}
-
+	
+	
 
     /**
      * Permet de transformer un signal analogique de type RZ en un signal logique
