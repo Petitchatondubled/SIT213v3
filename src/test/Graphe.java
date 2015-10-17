@@ -22,7 +22,6 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.ui.*;
 
-import com.sun.javafx.scene.paint.GradientUtils.Parser;
 
 /**
  * A simple demonstration application showing how to create a line chart using data from an
