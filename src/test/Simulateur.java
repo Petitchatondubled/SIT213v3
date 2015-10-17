@@ -59,6 +59,7 @@ import java.io.PrintWriter;
    private int dt = 0 ;
    private float ar = 0.0f ;
 
+
    
    	
    /** le  composant Source de la chaine de transmission */
@@ -228,6 +229,7 @@ import java.io.PrintWriter;
 //              	i--;
               } 
             else throw new ArgumentsException("Option invalide :"+ args[i]); // Si aucun argument ne correspond √  ceux d√©finis
+
           
          }
       
@@ -298,6 +300,7 @@ import java.io.PrintWriter;
 //    		 }else{
 //    			 transmetteurAnalogique = new TransmetteurParfaitAnalogique() ;
 //    		 }
+
     		 //Decodage
     		 
     		 Recepteur recepteur = new Recepteur(forme, nbEch, amplMax, amplMin);

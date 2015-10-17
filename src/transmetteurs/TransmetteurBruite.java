@@ -15,6 +15,7 @@ public class TransmetteurBruite extends Transmetteur<Float, Float> {
 	private int numTrajet;//liste des trajectoires
 	boolean signalBruiteTrajetMult = false ;
 	boolean signalBruite = false ;
+
 	/**
 	 * Constructeur de la classe Transmetteur bruite
 	 * @param snr rapport signal sur bruit voulu pour ce transmetteur
@@ -24,15 +25,6 @@ public class TransmetteurBruite extends Transmetteur<Float, Float> {
 		this.snr = snr;
 	}
 	//Constructeur pour utiliser un bruit à trajets multiples
-	public TransmetteurBruite ( float snr, float ar,int dt, int numTrajet)
-	{
-		this.signalBruiteTrajetMult = true ;
-		this.snr=snr;
-		this.ar=ar;
-		this.dt=dt;
-		this.numTrajet=numTrajet;
-		this.signalBruite = true ;
-	}
 	/**
 	 * Constructeur de la classe Transmetteur bruiteavec seed
 	 * @param snr rapport signal sur bruit voulu pour ce transmetteur
@@ -162,8 +154,9 @@ public class TransmetteurBruite extends Transmetteur<Float, Float> {
 			informationEmise.add((float)(infoGeneree.iemeElement(i)+val));
 			i++;
 		}
-		
+
 	}
+	
 //	public void bruitTrajetsMultiples(LinkedList<Float> ar, LinkedList<Integer> dt, LinkedList<Integer> numTrajet){
 //		//Stockage de l'information reçue dans l'information à émettre
 //		informationEmise = informationRecue; 
@@ -207,12 +200,14 @@ public class TransmetteurBruite extends Transmetteur<Float, Float> {
 //		}
 //	}
 
+
 	/**
 	    * Recoit l'information de l'emetteur
 	    */
 	@Override
 	public void recevoir(Information<Float> information) throws InformationNonConforme {
 		
+
 		informationRecue = information ;
 		
 		
@@ -241,6 +236,7 @@ public class TransmetteurBruite extends Transmetteur<Float, Float> {
 //		bruitBlancGaussien(snr,puissanceMoySignalRecu,seed); //Calcul des Ã©chantillons de bruit blanc et l'ajoute au signal Ã  Ã©mettre
 //		emettre(); //Emission de l'information bruitee vers le recepteur
 //		}
+
 	}
 	/**
 	    * Emet l'information bruitee
