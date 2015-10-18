@@ -17,6 +17,7 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 	private String forme ;
 	private float att ;
 	private int dt ;
+	private boolean multiTrajets = false ;
 	/**
 	 * Constructeur de la classe Recepteur
 	 * @param form forme du signal analogique
@@ -32,7 +33,7 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 		forme = form ;
 	}
 
-	public Recepteur(String form,int nEch,float aMax,float aMin,int pdt,int patt){
+	public Recepteur(String form,int nEch,float aMax,float aMin,int pdt,float patt){
 		
 		nEchantillon = nEch ;
 		ampMax = aMax ;
@@ -40,6 +41,7 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 		forme = form ;
 		dt =pdt ;
 		att=patt;
+		multiTrajets = true ;
 	}
 	/**
 	 * Permet de transformer un signal analogique de type NRZ ou NRZT en un signal logique
@@ -52,7 +54,14 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 		float sommeEchantillon = 0; //Somme des échantillons sur le temps d'un bit.
 		float moyenneAmplitude = 0;
 		float seuilDecision = (ampMax+ampMin)/2;
-		int nombreEchantillons = informationRecue.nbElements();
+		int nombreEchantillons ;
+		
+		if(multiTrajets){
+			nombreEchantillons = informationRecue.nbElements()-dt;
+		}else{
+			nombreEchantillons = informationRecue.nbElements();
+		}
+		
 		
 		
 		while(nombreEchantillons>i){ //tant qu'on a pas lu l'ensemble des échantillons du signal recu
@@ -61,7 +70,7 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 				sommeEchantillon = sommeEchantillon + informationRecue.iemeElement(j);
 			}
 			moyenneAmplitude = sommeEchantillon/nEchantillon;  
-						
+			
 			if (moyenneAmplitude > seuilDecision) {  //Au dessus du seuil -> 1
 				informationEmise.add(true); 
 			}else if (moyenneAmplitude < seuilDecision){  //En dessous du seuil -> 0
@@ -73,7 +82,6 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 		}		
 		
 	}
-	
 	
 
     /**
@@ -87,9 +95,12 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 		float sommeEchantillon = 0; //Somme des échantillons sur le temps d'un bit.
 		float moyenneAmplitude = 0;
 		float seuilDecision = (ampMax+ampMin)/2;
-		int nombreEchantillons = informationRecue.nbElements();
-		
-		
+		int nombreEchantillons ;
+		if(multiTrajets){
+			nombreEchantillons = informationRecue.nbElements()-dt;
+		}else{
+			nombreEchantillons = informationRecue.nbElements();
+		}
 		while(nombreEchantillons>i){ //tant qu'on a pas lu l'ensemble des échantillons du signal recu
 			//Calcul de la moyenne d'amplitude sur 1/3 du temps d'un bit (au milieu car RZ)
 			for(j=i+(nEchantillon/3);j<i+(2*(nEchantillon/3));j++){  
@@ -131,7 +142,9 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 		emettre(); // On emet le signal booleen retrouve a la destination
 	}
 	
-	
+	public void decodeurMultiTrajet(){
+		
+	}
 	/**
 	    * Emet l'information vers la ou les destination(s)
 	    */

@@ -302,8 +302,13 @@ import java.io.PrintWriter;
 //    		 }
 
     		 //Decodage
-    		 
-    		 Recepteur recepteur = new Recepteur(forme, nbEch, amplMax, amplMin);
+    		 Recepteur recepteur = null ;
+    		 if(signalBruiteTrajetsMult){
+    			 recepteur = new Recepteur(forme, nbEch, amplMax, amplMin,dt,ar);
+    		 }else{
+    			 recepteur = new Recepteur(forme, nbEch, amplMax, amplMin);
+    		 }
+    			 
     		 
     		 if(affichage){
     			 source.connecter(sondeLogique1);
@@ -405,13 +410,13 @@ import java.io.PrintWriter;
       		
          try {
              simulateur.execute();
-//            float tauxErreurBinaire = simulateur.calculTauxErreurBinaire();
-//            String s = "java  Simulateur  ";
-//            for (int i = 0; i < args.length; i++) {
-//         		s += args[i] + "  ";
-//         	}
-//            
-//			System.out.println(s + "  =>   TEB : " + tauxErreurBinaire );
+            float tauxErreurBinaire = simulateur.calculTauxErreurBinaire();
+            String s = "java  Simulateur  ";
+            for (int i = 0; i < args.length; i++) {
+         		s += args[i] + "  ";
+         	}
+            
+			System.out.println(s + "  =>   TEB : " + tauxErreurBinaire );
          }
             catch (Exception e) {
                System.out.println(e);
