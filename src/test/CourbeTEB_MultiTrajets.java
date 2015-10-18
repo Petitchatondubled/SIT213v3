@@ -1,0 +1,61 @@
+package test;
+
+
+import org.jfree.*;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.xy.XYDataset;
+import org.jfree.ui.RefineryUtilities;
+
+import information.Information;
+import visualisations.SondeAnalogique;
+
+public class CourbeTEB_MultiTrajets {
+	
+		
+
+	
+	    public static void main(final String[] args) throws Exception {//main pour lancer la simulation
+	    	
+	    	
+	    	Simulateur  simu = null;  //simulateur pour la simu
+	    	double nbTest = 100;  //nombre de réalisation (par défaut 100)
+	    	int dt = 1 ;  //snr de départ (par defaut -20)
+	    	int freqdt = 1; //Pas du snr (par dedfaut 0.1)
+	    	float ber = 0.0f; 
+	    	int nbit = 10000;  //nombre de bit envoyé
+	    	int seed = 5;  //germe utilisé pour avoir le même msg aleatoire à chaque fois
+	    	
+	    	Information<Float> berInfo = new Information<Float>(); //information contenant les valeur de BER
+	    	Information<Float> dtInfo = new Information<Float>();
+	
+	    	//lancement du simulateur en fonction du nbTest voulu en augmentant le snr à chaque fois avec un pas de freqsnr
+	    	for (int i=0; i<nbTest;i++){
+	    		
+		    	String arg1[]={"-ti","1",String.valueOf(dt),"1","-mess",String.valueOf(nbit),"-seed",String.valueOf(seed),"-form","NRZT"};
+				simu = new Simulateur(arg1);
+				
+				//pour le signal RZ
+				simu.execute(); //execution du simulateur
+				ber = simu.calculTauxErreurBinaire();//recuperation du BER
+				berInfo.add(ber);
+				dtInfo.add(new Float(dt));
+				
+			
+				dt += freqdt ;
+	    	}
+	    	
+	    	
+	    	
+	    	Graphe graphe = new Graphe("TEB/DT pour "+nbit+" bits");
+			graphe.createDataset("",dtInfo, berInfo);
+	        JFreeChart chart = graphe.createChart(graphe.dataset,"Decallage (nombre échantillons)","TEB");
+	        ChartPanel chartPanel = new ChartPanel(chart);
+	        chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
+	        graphe.setContentPane(chartPanel);
+	        graphe.pack();
+	        RefineryUtilities.centerFrameOnScreen(graphe);
+	        graphe.setVisible(true);
+	    }
+	    
+	}
