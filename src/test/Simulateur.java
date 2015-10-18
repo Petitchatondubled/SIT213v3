@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 
-/** La classe Simulateur permet de construire et simuler une cha�ne de transmission compos�e d'une Source, d'un nombre variable de Transmetteur(s) et d'une Destination.  
+/** La classe Simulateur permet de construire et simuler une chaï¿½ne de transmission composï¿½e d'une Source, d'un nombre variable de Transmetteur(s) et d'une Destination.  
  * @author cousin
  * @author prou
  *
@@ -28,37 +28,37 @@ import java.io.PrintWriter;
       	
    /** indique si le Simulateur utilise des sondes d'affichage */
       private          boolean affichage = false;
-   /** indique si le Simulateur utilise un message g�n�r� de mani�re al�atoire */
+   /** indique si le Simulateur utilise un message gï¿½nï¿½rï¿½ de maniï¿½re alï¿½atoire */
       private          boolean messageAleatoire = true;
-   /** indique si le Simulateur utilise un germe pour initialiser les g�n�rateurs al�atoires */
+   /** indique si le Simulateur utilise un germe pour initialiser les gï¿½nï¿½rateurs alï¿½atoires */
       private          boolean aleatoireAvecGerme = false;
-   /** la valeur de la semence utilis�e pour les g�n�rateurs al�atoires */
+   /** la valeur de la semence utilisï¿½e pour les gï¿½nï¿½rateurs alï¿½atoires */
       private          Integer seed = null;
-   /** la longueur du message al�atoire � transmettre si un message n'est pas impose */
+   /** la longueur du message alï¿½atoire ï¿½ transmettre si un message n'est pas impose */
       private          int nbBitsMess = 100; 
-   /** la cha�ne de caract�res correspondant � m dans l'argument -mess m */
+   /** la chaï¿½ne de caractï¿½res correspondant ï¿½ m dans l'argument -mess m */
       private          String messageString = "100";
    /** la chaine de caractere correspond au type de forme du signal analogique */   
       private String forme = "RZ" ;
-   /** Le nombre d'échantillon par bit, c'est le temps bit indirectement */
+   /** Le nombre d'Ã©chantillon par bit, c'est le temps bit indirectement */
       private int nbEch = 30 ;
-   /** L'amplitude maximun du signal analogique, par défaut c'est 1.0f*/
+   /** L'amplitude maximun du signal analogique, par dÃ©faut c'est 1.0f*/
       private float amplMax = 1.0f ;
-   /** L'amplitude minimum du signal analogique, par défaut c'est 0.0f*/
+   /** L'amplitude minimum du signal analogique, par dÃ©faut c'est 0.0f*/
       private float amplMin = 0.0f ;
-   /** Indique si le simulateur utilise un signal analogique, par défaut c'est false*/  
+   /** Indique si le simulateur utilise un signal analogique, par dÃ©faut c'est false*/  
       private boolean messageAnalogique = false ;
    /** Rapport signal sur bruit desire dans le transmetteur, valeur par defaut : 0.0f*/
    private boolean signalBruite = false ;
    /** Rapport signal sur bruit desire dans le transmetteur, valeur par defaut : 0.0f*/
    private float snr = 0.0f ;
    
-   //Attribut pour le signal bruit� reel
+   //Attribut pour le signal bruité reel
    private boolean signalBruiteTrajetsMult = false;
-   private int numTraj= 1; //nombre de trajectoires souhait�s
-   private int dt = 0 ;
-   private float ar = 0.0f ;
-
+   private Information<Integer> numTraj = new Information<Integer>(); //nombre de trajectoires souhaités
+   private Information<Integer> dt = new Information<Integer>() ;
+   private Information<Float> ar = new Information<Float>() ;
+   
 
    
    	
@@ -72,9 +72,9 @@ import java.io.PrintWriter;
       private			  Destination <Boolean>  destination = null;
    	
    
-   /** Le constructeur de Simulateur construit une chaine de transmission composee d'une Source Boolean, d'une Destination Boolean et de Transmetteur(s) [voir la m�thode analyseArguments]...  
-   * <br> Les diff�rents composants de la cha�ne de transmission (Source, Transmetteur(s), Destination, Sonde(s) de visualisation) sont crees et connect�s.
-   * @param args le tableau des diff�rents arguments.
+   /** Le constructeur de Simulateur construit une chaine de transmission composee d'une Source Boolean, d'une Destination Boolean et de Transmetteur(s) [voir la mï¿½thode analyseArguments]...  
+   * <br> Les diffï¿½rents composants de la chaï¿½ne de transmission (Source, Transmetteur(s), Destination, Sonde(s) de visualisation) sont crees et connectï¿½s.
+   * @param args le tableau des diffï¿½rents arguments.
    *
    * @throws ArgumentsException si un des arguments est incorrect
    *
@@ -87,32 +87,32 @@ import java.io.PrintWriter;
    
    
    
-   /** La mÃ©thode analyseArguments extrait d'un tableau de chaï¿œnes de caractÃšres les diffï¿œrentes options de la simulation. 
-   * Elle met Ã�  jour les attributs du Simulateur.
+   /** La mÃƒÂ©thode analyseArguments extrait d'un tableau de chaÃ¯Â¿Å“nes de caractÃƒÅ¡res les diffÃ¯Â¿Å“rentes options de la simulation. 
+   * Elle met ÃƒÂ  jour les attributs du Simulateur.
    *
-   * <br>  Les arguments autorisÃ©s sont : 
+   * <br>  Les arguments autorisÃƒÂ©s sont : 
    * <dl>
-   * <dt> -mess m  </dt><dd> m (String) constituï¿œ de 7 ou plus digits Ã�  0 | 1, le message Ã�  transmettre</dd>
-   * <dt> -mess m  </dt><dd> m (int) constituï¿œ de 1 Ã�  6 digits, le nombre de bits du message "alÃ©atoire" Ã�  transmettre</dd> 
+   * <dt> -mess m  </dt><dd> m (String) constituÃ¯Â¿Å“ de 7 ou plus digits ÃƒÂ  0 | 1, le message ÃƒÂ  transmettre</dd>
+   * <dt> -mess m  </dt><dd> m (int) constituÃ¯Â¿Å“ de 1 ÃƒÂ  6 digits, le nombre de bits du message "alÃƒÂ©atoire" ÃƒÂ  transmettre</dd> 
    * <dt> -s </dt><dd> utilisation des sondes d'affichage</dd>
-   * <dt> -seed v </dt><dd> v (int) d'initialisation pour les gÃ©nÃ©rateurs alÃ©atoires</dd> 
-   * <dt> -form f </dt><dd>  codage (String) RZ, NRZR, NRZT, la forme d'onde du signal Ã�  transmettre (RZ par dï¿œfaut)</dd>
-   * <dt> -nbEch ne </dt><dd> ne (int) le nombre d'Ã©chantillons par bit (ne supÃ©rieur ou Ã©gale 6 pour du RZ, ne supÃ©rieur ou Ã©gale 9 pour du NRZT, ne supÃ©rieur ou Ã©gale 18 pour du RZ,  30 par dÃ©faut))</dd>
-   * <dt> -ampl min max </dt><dd>  min (float) et max (float), les amplitudes min et max du signal analogique Ã�  transmettre ( min infÃ©rieur Ã�  max, 0.0 et 1.0 par dÃ©faut))</dd> 
+   * <dt> -seed v </dt><dd> v (int) d'initialisation pour les gÃƒÂ©nÃƒÂ©rateurs alÃƒÂ©atoires</dd> 
+   * <dt> -form f </dt><dd>  codage (String) RZ, NRZR, NRZT, la forme d'onde du signal ÃƒÂ  transmettre (RZ par dÃ¯Â¿Å“faut)</dd>
+   * <dt> -nbEch ne </dt><dd> ne (int) le nombre d'ÃƒÂ©chantillons par bit (ne supÃƒÂ©rieur ou ÃƒÂ©gale 6 pour du RZ, ne supÃƒÂ©rieur ou ÃƒÂ©gale 9 pour du NRZT, ne supÃƒÂ©rieur ou ÃƒÂ©gale 18 pour du RZ,  30 par dÃƒÂ©faut))</dd>
+   * <dt> -ampl min max </dt><dd>  min (float) et max (float), les amplitudes min et max du signal analogique ÃƒÂ  transmettre ( min infÃƒÂ©rieur ÃƒÂ  max, 0.0 et 1.0 par dÃƒÂ©faut))</dd> 
    * 
    * <dt> -snr s </dt><dd> s (float) le rapport signal/bruit en dB</dd>
    * 
-   * <dt> -ti i dt ar </dt><dd> i (int) numero du trajet indirect (de 1 Ã�  5), dt (int) valeur du decalage temporel du iÃ©me trajet indirect 
-   * en nombre d'Ã©chantillons par bit, ar (float) amplitude relative au signal initial du signal ayant effectuÃš le iÃ©me trajet indirect</dd>
+   * <dt> -ti i dt ar </dt><dd> i (int) numero du trajet indirect (de 1 ÃƒÂ  5), dt (int) valeur du decalage temporel du iÃƒÂ©me trajet indirect 
+   * en nombre d'ÃƒÂ©chantillons par bit, ar (float) amplitude relative au signal initial du signal ayant effectuÃƒÅ¡ le iÃƒÂ©me trajet indirect</dd>
    * 
    * <dt> -transducteur </dt><dd> utilisation de transducteur</dd>
    * 
-   * <dt> -aveugle </dt><dd> les rï¿œcepteurs ne connaissent ni l'amplitude min et max du signal, ni les diffï¿œrents trajets indirects (s'il y en a).</dd>
+   * <dt> -aveugle </dt><dd> les rÃ¯Â¿Å“cepteurs ne connaissent ni l'amplitude min et max du signal, ni les diffÃ¯Â¿Å“rents trajets indirects (s'il y en a).</dd>
    * 
    * </dl>
    * <b>Contraintes</b> :
-   * Il y a des interdÃ©pendances sur les paramÃ©tres effectifs. 
-   * @param args le tableau des diffÃ©rents arguments.
+   * Il y a des interdÃƒÂ©pendances sur les paramÃƒÂ©tres effectifs. 
+   * @param args le tableau des diffÃƒÂ©rents arguments.
    * @throws ArgumentsException si un des arguments est incorrect.
    *
    */   
@@ -124,7 +124,7 @@ import java.io.PrintWriter;
             if (args[i].matches("-s")){ // indique si on souhaite l'affichage des sondes
                affichage = true;
             }
-            else if (args[i].matches("-seed")) { //permet de savoir si on souhaite genereer des données via un germe
+            else if (args[i].matches("-seed")) { //permet de savoir si on souhaite genereer des donnÃ©es via un germe
                aleatoireAvecGerme = true;
                i++; 
             	
@@ -169,27 +169,27 @@ import java.io.PrintWriter;
             	}
             	
             }
-            else if (args[i].matches("-ampl")){ //Définissons des amplitudes
+            else if (args[i].matches("-ampl")){ //DÃ©finissons des amplitudes
             	i++; //on incremente i pour recuperer le parametre
             	messageAnalogique = true ;// On indique au simulateur qu'on souhaite transmettre un signal analogique
             	amplMin = new Float(args[i]) ;
             	i++ ;
             	amplMax = new Float(args[i]) ;
             	
-            	if(amplMin>=amplMax){ // on verifie que l'amplitude max est bien supérieur �  la minimum, sinon exception
-            		throw new ArgumentsException("Valeur du parametre -ampl invalide : min doit être inférieur �  max" );
+            	if(amplMin>=amplMax){ // on verifie que l'amplitude max est bien supÃ©rieur Ã  la minimum, sinon exception
+            		throw new ArgumentsException("Valeur du parametre -ampl invalide : min doit Ãªtre infÃ©rieur Ã  max" );
             	}
             	
             	
             }
-            else if (args[i].matches("-nbEch")){ // Définissions du nombre d'échantillons par bit
+            else if (args[i].matches("-nbEch")){ // DÃ©finissions du nombre d'Ã©chantillons par bit
             	i++; 
             	messageAnalogique = true ;
             	nbEch = new Integer(args[i]) ;
-            	if(nbEch<=0){ // on verifie que l'utilisateur veut bien au moins un échantillon du signal
-            		throw new ArgumentsException("Valeur du parametre -nbEch invalide : le nombre d'échantillon doit être positif" );
-            	}else if(nbEch<3 && (forme.equals("RZ") || forme.equals("NRZT"))){ // On oblige l'utilisateur �  avoir au moins trois échantillons pour ces signaux (faisabilité)
-            		throw new ArgumentsException("Valeur du parametre -nbEch invalide : pour le signal "+forme+" nous devons avoir au moins 3 échantillons" );
+            	if(nbEch<=0){ // on verifie que l'utilisateur veut bien au moins un Ã©chantillon du signal
+            		throw new ArgumentsException("Valeur du parametre -nbEch invalide : le nombre d'Ã©chantillon doit Ãªtre positif" );
+            	}else if(nbEch<3 && (forme.equals("RZ") || forme.equals("NRZT"))){ // On oblige l'utilisateur Ã  avoir au moins trois Ã©chantillons pour ces signaux (faisabilitÃ©)
+            		throw new ArgumentsException("Valeur du parametre -nbEch invalide : pour le signal "+forme+" nous devons avoir au moins 3 Ã©chantillons" );
             	}
             	
             	
@@ -201,16 +201,24 @@ import java.io.PrintWriter;
             	snr = new Float(args[i]) ;
             	         	
             }
-            else if (args[i].matches("-ti")){ //D�finission du signal bruit� avec trajet multiple
+            else if (args[i].matches("-ti")){ //Définission du signal bruité avec trajet multiple
               	i++; //on incremente i pour recuperer le parametre
               	messageAnalogique = true ;// On indique au simulateur qu'on souhaite transmettre un signal analogique
-              	signalBruiteTrajetsMult = true;//Il s'agit d'un signal bruit� � trajets multiples
-              	int z=i;
-               	numTraj= new Integer(args[z]);//Le nombre de trajectoire souhait�e
+              	signalBruiteTrajetsMult = true;//Il s'agit d'un signal bruité à trajets multiples
+              	int num = new Integer(args[i]);
+              	if(num<1 || num>5) throw new ArgumentsException("Valeur du parametre -ti invalide : le nombre de trajet doit être compris entre 1 et 5");
+              	for(int b :numTraj){
+              		if(b == num){
+              			throw new ArgumentsException("Valeur du parametre -ti invalide : Ce numéro de trajet existe dèjà");
+              		}
+              	}
+               	numTraj.add(new Integer(args[i]));//Le nombre de trajectoire souhaitée
         		i++;
-        		dt = new Integer(args[i]);
+        		dt.add(new Integer(args[i]));
         		i++;
-        		ar = new Float(args[i]);
+        		Float attenuation = new Float(args[i]);
+        		if(attenuation>1.0f || attenuation<0.0f) throw new ArgumentsException("Valeur du parametre -ti invalide : l'attenuation doitre comprise entre 1 et 0");
+        		ar.add(attenuation);
         		
 //              	for (int j=0; j<nbTraj; j++){
 //            	
@@ -228,7 +236,7 @@ import java.io.PrintWriter;
 //              	}	
 //              	i--;
               } 
-            else throw new ArgumentsException("Option invalide :"+ args[i]); // Si aucun argument ne correspond �  ceux définis
+            else throw new ArgumentsException("Option invalide :"+ args[i]); // Si aucun argument ne correspond Ã  ceux dÃ©finis
 
           
          }
@@ -236,9 +244,9 @@ import java.io.PrintWriter;
       }
      
     
-   /** La m�thode execute effectue un envoi de message par la source de la cha�ne de transmission du Simulateur. 
+   /** La mï¿½thode execute effectue un envoi de message par la source de la chaï¿½ne de transmission du Simulateur. 
    *
-   * @throws Exception si un probl�me survient lors de l'ex�cution
+   * @throws Exception si un problï¿½me survient lors de l'exï¿½cution
    *
    */ 
       public void execute() throws Exception {
@@ -267,9 +275,9 @@ import java.io.PrintWriter;
     		 
     		 //creation d'un transmetteur
     		 
-    		 if(signalBruite){//Si le signal est bruit� BBG
+    		 if(signalBruite){//Si le signal est bruité BBG
     			 if(signalBruiteTrajetsMult){ //Si le signal est multi Trajets
-    				 if(aleatoireAvecGerme){ //Si le bruit blanc gaussien est gener�e avec une germe
+    				 if(aleatoireAvecGerme){ //Si le bruit blanc gaussien est generée avec une germe
         				 transmetteurAnalogique = new TransmetteurBruite(snr,seed,numTraj,dt,ar);
         			 }else {
         				 transmetteurAnalogique = new TransmetteurBruite(snr,numTraj,dt,ar);
@@ -281,7 +289,7 @@ import java.io.PrintWriter;
         				 transmetteurAnalogique = new TransmetteurBruite(snr);
         			 }
     			 }
-    		 }else{//Si le signal n'est pas bruit� mais seulement contient un multiTrajets
+    		 }else{//Si le signal n'est pas bruité mais seulement contient un multiTrajets
     			 if(signalBruiteTrajetsMult){
     				 transmetteurAnalogique = new TransmetteurBruite(numTraj,dt,ar);
     			 }else{
@@ -334,10 +342,10 @@ import java.io.PrintWriter;
         	
         	
         	source.connecter(transmetteurLogique); //Connexion de la source et du transmetteur
-        	if(affichage) source.connecter(sondeLogique1); // affichage des sondes si souhaité par l'utilisateur
+        	if(affichage) source.connecter(sondeLogique1); // affichage des sondes si souhaitÃ© par l'utilisateur
         	
         	transmetteurLogique.connecter(destination); //Connexion du transmetteur et de la destination finale
-        	if(affichage) transmetteurLogique.connecter(sondeLogique2); // affichage des sondes si souhaité par l'utilisateur
+        	if(affichage) transmetteurLogique.connecter(sondeLogique2); // affichage des sondes si souhaitÃ© par l'utilisateur
       
         	source.emettre(); // on emet le signal
         	
@@ -357,10 +365,10 @@ import java.io.PrintWriter;
          	
          	
          	source.connecter(transmetteurLogique); //Connexion de la source et du transmetteur
-         	if(affichage) source.connecter(sondeLogique1); // affichage des sondes si souhaité par l'utilisateur
+         	if(affichage) source.connecter(sondeLogique1); // affichage des sondes si souhaitÃ© par l'utilisateur
          	
          	transmetteurLogique.connecter(destination); //Connexion du transmetteur et de la destination finale
-         	if(affichage) transmetteurLogique.connecter(sondeLogique2); // affichage des sondes si souhaité par l'utilisateur
+         	if(affichage) transmetteurLogique.connecter(sondeLogique2); // affichage des sondes si souhaitÃ© par l'utilisateur
        
          	source.emettre(); // on emet le signal
          }
@@ -369,18 +377,18 @@ import java.io.PrintWriter;
    }
    	   	
    	
-   /** La m�thode qui calcule le taux d'erreur binaire en comparant les bits du message �mis avec ceux du message re�u.
+   /** La mï¿½thode qui calcule le taux d'erreur binaire en comparant les bits du message ï¿½mis avec ceux du message reï¿½u.
    *
    * @return  La valeur du Taux dErreur Binaire.
    */   	   
       public float  calculTauxErreurBinaire() {
       
-      	int nbElementsEmis = source.getInformationEmise().nbElements() ; // on recupere le nombre d'elements émis
+      	int nbElementsEmis = source.getInformationEmise().nbElements() ; // on recupere le nombre d'elements Ã©mis
       	System.out.println(source.getInformationEmise().nbElements());
         int nbBitsFaux = 0 ;
       	int i ;
       	for(i=0;i<nbElementsEmis;i++){
-      		if(source.getInformationEmise().iemeElement(i) != destination.getInformationRecue().iemeElement(i)){ // on verifie la correspondance entre ce qu'on a émis et ce qu'on a recu
+      		if(source.getInformationEmise().iemeElement(i) != destination.getInformationRecue().iemeElement(i)){ // on verifie la correspondance entre ce qu'on a Ã©mis et ce qu'on a recu
       			nbBitsFaux++ ;
       		}	
       	}
@@ -393,8 +401,8 @@ import java.io.PrintWriter;
    
    
    
-   /** La fonction main instancie un Simulateur � l'aide des arguments param�tres et affiche le r�sultat de l'ex�cution d'une transmission.
-   *  @param args les diff�rents arguments qui serviront � l'instanciation du Simulateur.
+   /** La fonction main instancie un Simulateur ï¿½ l'aide des arguments paramï¿½tres et affiche le rï¿½sultat de l'exï¿½cution d'une transmission.
+   *  @param args les diffï¿½rents arguments qui serviront ï¿½ l'instanciation du Simulateur.
    */
       public static void main(String [] args) { 
       
