@@ -15,7 +15,7 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 	private float ampMax ;
 	private float ampMin ;
 	private String forme ;
-	private float att ;
+	private Information<Float> att ;
 	private int dt ;
 	private boolean multiTrajets = false ;
 	/**
@@ -33,15 +33,32 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 		forme = form ;
 	}
 
-	public Recepteur(String form,int nEch,float aMax,float aMin,int pdt,float patt){
+	public Recepteur(String form,int nEch,float aMax,float aMin,Information<Integer> pdt,Information<Float> patt){
 		
 		nEchantillon = nEch ;
 		ampMax = aMax ;
 		ampMin = aMin ;
 		forme = form ;
-		dt =pdt ;
+		dt =max(pdt) ;
 		att=patt;
 		multiTrajets = true ;
+	}
+	/**
+	 * Permet de trouver le maximum d'une liste de INT
+	 * @param info liste de int
+	 * @return le maximum trouvé
+	 */
+	public int max(Information<Integer> info){
+		
+		int max = 0 ;
+		for(int a : info){
+			
+			if(a>=max){
+				max = a ;
+			}
+		}
+		
+		return max;
 	}
 	/**
 	 * Permet de transformer un signal analogique de type NRZ ou NRZT en un signal logique
