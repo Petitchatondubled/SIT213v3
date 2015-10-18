@@ -199,7 +199,7 @@ import java.io.PrintWriter;
             	messageAnalogique = true ;// On indique au simulateur qu'on souhaite transmettre un signal analogique
             	signalBruite = true;
             	snr = new Float(args[i]) ;
-            	         	
+            	if(snr<-300) throw new ArgumentsException("Valeur du parametre -snr invalide : Le snr ne peut pas être inférieur à -300 ");       	
             }
             else if (args[i].matches("-ti")){ //Définission du signal bruité avec trajet multiple
               	i++; //on incremente i pour recuperer le parametre
@@ -219,22 +219,7 @@ import java.io.PrintWriter;
         		Float attenuation = new Float(args[i]);
         		if(attenuation>1.0f || attenuation<0.0f) throw new ArgumentsException("Valeur du parametre -ti invalide : l'attenuation doitre comprise entre 1 et 0");
         		ar.add(attenuation);
-        		
-//              	for (int j=0; j<nbTraj; j++){
-//            	
-//            	
-//                numTrajet.add(new Integer(args[i]));
-//              	if(numTrajet.get(j)!=j+1){ 
-//            		throw new ArgumentsException("Valeur du parametre -ti invalide : veuillez initialiser la trajectoire "+(j+1) );}
-//            	else {
-//              	i++;
-//              	dt.add(new Integer(args[i]));
-//              	i++;
-//              	ar.add(new Float(args[i]));
-//            	}
-//              	i++;        	
-//              	}	
-//              	i--;
+        	
               } 
             else throw new ArgumentsException("Option invalide :"+ args[i]); // Si aucun argument ne correspond Ã  ceux dÃ©finis
 
@@ -297,18 +282,6 @@ import java.io.PrintWriter;
     			 }
     		 }
     		 
-//    		 if(signalBruite && !signalBruiteTrajetsMult){
-//    			 if(aleatoireAvecGerme){
-//    				 transmetteurAnalogique = new TransmetteurBruite(snr,seed);
-//    			 }else {
-//    				 transmetteurAnalogique = new TransmetteurBruite(snr);
-//    			 }
-//    		 }else if(signalBruiteTrajetsMult && signalBruite){
-//       			 transmetteurAnalogique = new TransmetteurBruite(snr,ar,dt,numTrajet);
-//    		 }else{
-//    			 transmetteurAnalogique = new TransmetteurParfaitAnalogique() ;
-//    		 }
-
     		 //Decodage
     		 Recepteur recepteur = null ;
     		 if(signalBruiteTrajetsMult){

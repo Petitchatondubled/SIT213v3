@@ -23,6 +23,7 @@ public class TransmetteurBruite extends Transmetteur<Float, Float> {
 	public TransmetteurBruite (float snr)
 	{
 		this.snr = snr;
+		signalBruite = true ;
 	}
 	//Constructeur pour utiliser un bruit à trajets multiples
 	/**
