@@ -10,9 +10,9 @@ public class TransmetteurBruite extends Transmetteur<Float, Float> {
 	private float snr;
 	public float puissanceMoyBruit = 0;
 	private int seed = -1; //germe du random si -1 ça veut dire qu'il n'y a pas de germe
-	private int dt;//liste des retards
-	private float ar ;//liste des atténuations
-	private int numTrajet;//liste des trajectoires
+	private Information<Integer> dt = new Information<Integer>();//liste des retards
+	private Information<Float> ar = new Information<Float>() ;//liste des atténuations
+	private Information<Integer> numTrajet = new Information<Integer>() ;//liste des trajectoires
 	boolean signalBruiteTrajetMult = false ;
 	boolean signalBruite = false ;
 
@@ -38,8 +38,7 @@ public class TransmetteurBruite extends Transmetteur<Float, Float> {
 		signalBruite = true ;
 	}
 	
-	public TransmetteurBruite(float snr, Integer seed, int numTraj, int dt,
-			float ar) {
+	public TransmetteurBruite(float snr, Integer seed, Information<Integer> numTraj, Information<Integer> dt,Information<Float> ar) {
 		
 		this.signalBruiteTrajetMult = true ;
 		this.snr=snr;
@@ -49,7 +48,7 @@ public class TransmetteurBruite extends Transmetteur<Float, Float> {
 		this.seed = seed;
 		signalBruite = true ;
 	}
-	public TransmetteurBruite(float snr, int numTraj, int dt, float ar) {
+	public TransmetteurBruite(float snr,Information<Integer> numTraj, Information<Integer> dt,Information<Float> ar) {
 		
 		this.signalBruiteTrajetMult = true ;
 		this.snr=snr;
@@ -59,7 +58,7 @@ public class TransmetteurBruite extends Transmetteur<Float, Float> {
 		signalBruite = true ;
 		
 	}
-	public TransmetteurBruite(int numTraj, int dt, float ar) {
+	public TransmetteurBruite(Information<Integer> numTraj, Information<Integer> dt,Information<Float> ar) {
 		this.signalBruiteTrajetMult = true ;
 		this.ar=ar;
 		this.dt=dt;
@@ -126,24 +125,58 @@ public class TransmetteurBruite extends Transmetteur<Float, Float> {
 		return echantillonBruite;
 	}
 	
-	
-	public Information<Float> decalageInfo(Information<Float> info,int dt,float att){
+	/**
+	 * Permet de recuperer un signal et des parametres pour la réalisation d'un signal en sortie contenant ce meme signal decallé
+	 * @param info signal auquel rajouter les décallages
+	 * @param dt : une liste de decallage
+	 * @param ar : une liste d'atténuation
+	 * @return le signal avec contenant les decallages
+	 */
+	public Information<Float> decalageInfo(Information<Float> info,Information<Integer> dt,Information<Float> ar){
 		
 		Information<Float> infoCreated = new Information<Float>();
-		for(int i =0;i<dt;i++){
+	
+		for(int j=0;j<max(dt)+info.nbElements();j++){
 			infoCreated.add(0.0f);
 		}
-		for(float val : info){
-			infoCreated.add(att*val);
+		
+		int i = 0 ;
+		while(dt.nbElements()>i){
+			for(int k=dt.iemeElement(i);k<dt.iemeElement(i)+info.nbElements();k++){
+				
+				infoCreated.setIemeElement(k, infoCreated.iemeElement(k)+info.iemeElement(k-dt.iemeElement(i))*ar.iemeElement(i));
+			}
+			i++;
 		}
+		
 		return infoCreated ;
 	}
+	/**
+	 * Retourne le maximum d'une liste d'entier
+	 * @param info Liste d'entier
+	 * @return l'entier maximum
+	 */
+	public int max(Information<Integer> info){
+		
+		int max = 0 ;
+		for(int a : info){
+			
+			if(a>=max){
+				max = a ;
+			}
+		}
+		
+		return max;
+	}
 	
+	/**
+	 * Methode permettant de créer les trajets multiples
+	 */
 	public void bruitMultiTrajet(){
 		
 		Information<Float> infoGeneree = decalageInfo(informationRecue, dt,ar);
 
-		for(int i=0;i<dt;i++){
+		for(int i=0;i<max(dt);i++){
 			informationRecue.add(0.0f);
 		}
 		//On initialise la chaîne à émettre
@@ -156,50 +189,6 @@ public class TransmetteurBruite extends Transmetteur<Float, Float> {
 		}
 
 	}
-	
-//	public void bruitTrajetsMultiples(LinkedList<Float> ar, LinkedList<Integer> dt, LinkedList<Integer> numTrajet){
-//		//Stockage de l'information reçue dans l'information à émettre
-//		informationEmise = informationRecue; 
-//		
-//		//Déclaration de la trajectoire et ajout de l'informatino reçue
-//		Information<Float> trajectoire = new Information<Float>();	
-//		for(Float f : informationRecue) trajectoire.add(f);
-//		
-//		//Calcul de la puissance moyenne du signal pour le bruit blanc Gaussien
-//		float puissanceMoySignalRecu=calculPuissanceMoySignalRecu (informationRecue);
-//		
-//	//Calcul des trajectoires indirects	
-//		//Création des décalages de chaque trajet indirect
-//		int c;
-//		for(c =0; c<dt.size(); c++ ){
-//			int retard = dt.get(c);
-//			for(int i=0; i<retard; i++){
-//				trajectoire.setIemeElement(i, 0.0f );
-//			}
-//			//Stockage de la trajectoire retardée dans la liste des trajets 
-//			trajet.add(numTrajet.get(c)-1,trajectoire);
-//		}
-//		//Ajout du signal d'origine après le décalage dt pout chaque trajectoire
-//		for(c =0; c<dt.size(); c++ ){
-//			int j =0;
-//			while(j<informationRecue.nbElements()-dt.get(c)){
-//				trajectoire.setIemeElement(j+dt.get(c), ar.get(c)*informationRecue.iemeElement(j) );
-//				j++;
-//			}
-//		//Ajout des trajectorie dans la liste des trajets
-//		trajet.add(numTrajet.get(c)-1,trajectoire);
-//		}
-//	
-//		//Ajout des trajectoires et du bruit au signal d'origine
-//		int k=0;		
-//		for (Float echantillon : informationEmise){
-//			for(c =0; c<dt.size(); c++ ){
-//			informationEmise.setIemeElement(k, informationRecue.iemeElement(k)+ trajet.get(numTrajet.get(c)-1).iemeElement(k)+bruitBlancGaussien(snr,puissanceMoySignalRecu,seed));
-//			}
-//			k++;
-//		}
-//	}
-
 
 	/**
 	    * Recoit l'information de l'emetteur

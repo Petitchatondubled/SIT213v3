@@ -55,10 +55,10 @@ import java.io.PrintWriter;
    
    //Attribut pour le signal bruité reel
    private boolean signalBruiteTrajetsMult = false;
-   private int numTraj= 1; //nombre de trajectoires souhaités
-   private int dt = 0 ;
-   private float ar = 0.0f ;
-
+   private Information<Integer> numTraj = new Information<Integer>(); //nombre de trajectoires souhaités
+   private Information<Integer> dt = new Information<Integer>() ;
+   private Information<Float> ar = new Information<Float>() ;
+   
 
    
    	
@@ -205,12 +205,20 @@ import java.io.PrintWriter;
               	i++; //on incremente i pour recuperer le parametre
               	messageAnalogique = true ;// On indique au simulateur qu'on souhaite transmettre un signal analogique
               	signalBruiteTrajetsMult = true;//Il s'agit d'un signal bruité à trajets multiples
-              	int z=i;
-               	numTraj= new Integer(args[z]);//Le nombre de trajectoire souhaitée
+              	int num = new Integer(args[i]);
+              	if(num<1 || num>5) throw new ArgumentsException("Valeur du parametre -ti invalide : le nombre de trajet doit être compris entre 1 et 5");
+              	for(int b :numTraj){
+              		if(b == num){
+              			throw new ArgumentsException("Valeur du parametre -ti invalide : Ce numéro de trajet existe dèjà");
+              		}
+              	}
+               	numTraj.add(new Integer(args[i]));//Le nombre de trajectoire souhaitée
         		i++;
-        		dt = new Integer(args[i]);
+        		dt.add(new Integer(args[i]));
         		i++;
-        		ar = new Float(args[i]);
+        		Float attenuation = new Float(args[i]);
+        		if(attenuation>1.0f || attenuation<0.0f) throw new ArgumentsException("Valeur du parametre -ti invalide : l'attenuation doitre comprise entre 1 et 0");
+        		ar.add(attenuation);
         		
 //              	for (int j=0; j<nbTraj; j++){
 //            	
