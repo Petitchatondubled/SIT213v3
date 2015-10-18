@@ -384,7 +384,7 @@ import java.io.PrintWriter;
       public float  calculTauxErreurBinaire() {
       
       	int nbElementsEmis = source.getInformationEmise().nbElements() ; // on recupere le nombre d'elements émis
-      	System.out.println(source.getInformationEmise().nbElements());
+      
         int nbBitsFaux = 0 ;
       	int i ;
       	for(i=0;i<nbElementsEmis;i++){

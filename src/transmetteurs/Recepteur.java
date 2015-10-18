@@ -74,6 +74,7 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 		int nombreEchantillons ;
 		
 		if(multiTrajets){
+			
 			nombreEchantillons = informationRecue.nbElements()-dt;
 		}else{
 			nombreEchantillons = informationRecue.nbElements();
@@ -88,7 +89,7 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 			}
 			moyenneAmplitude = sommeEchantillon/nEchantillon;  
 			
-			if (moyenneAmplitude > seuilDecision) {  //Au dessus du seuil -> 1
+			if (moyenneAmplitude >= seuilDecision) {  //Au dessus du seuil -> 1
 				informationEmise.add(true); 
 			}else if (moyenneAmplitude < seuilDecision){  //En dessous du seuil -> 0
 				informationEmise.add(false);
@@ -118,6 +119,7 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 		}else{
 			nombreEchantillons = informationRecue.nbElements();
 		}
+		 
 		while(nombreEchantillons>i){ //tant qu'on a pas lu l'ensemble des échantillons du signal recu
 			//Calcul de la moyenne d'amplitude sur 1/3 du temps d'un bit (au milieu car RZ)
 			for(j=i+(nEchantillon/3);j<i+(2*(nEchantillon/3));j++){  
@@ -125,7 +127,7 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 			}
 			moyenneAmplitude = sommeEchantillon/(nEchantillon/3);  
 						
-			if (moyenneAmplitude > seuilDecision) {  //Au dessus du seuil -> 1
+			if (moyenneAmplitude >= seuilDecision) {  //Au dessus du seuil -> 1
 				informationEmise.add(true); 
 			}else if (moyenneAmplitude < seuilDecision){ //En dessous du seuil -> 0
 				informationEmise.add(false);
@@ -133,6 +135,7 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 			i+=nEchantillon ; //on incremente i pour regarder le prochain bit
 			moyenneAmplitude = 0;
 			sommeEchantillon = 0;
+		
 		}
 
 	}

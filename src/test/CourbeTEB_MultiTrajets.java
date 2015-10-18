@@ -20,14 +20,16 @@ public class CourbeTEB_MultiTrajets {
 	    	
 	    	Simulateur  simu = null;  //simulateur pour la simu
 	    	double nbTest = 100;  //nombre de réalisation (par défaut 100)
-	    	int dt = 1 ;  //snr de départ (par defaut -20)
+	    	int dt = 0 ;  //snr de départ (par defaut -20)
 	    	int freqdt = 1; //Pas du snr (par dedfaut 0.1)
 	    	float ber = 0.0f; 
 	    	int nbit = 10000;  //nombre de bit envoyé
 	    	int seed = 5;  //germe utilisé pour avoir le même msg aleatoire à chaque fois
 	    	
-	    	Information<Float> berInfo = new Information<Float>(); //information contenant les valeur de BER
+	    	Information<Float> berInfoNRZT = new Information<Float>(); //information contenant les valeur de BER
 	    	Information<Float> dtInfo = new Information<Float>();
+	    	Information<Float> berInfoNRZ = new Information<Float>(); //information contenant les valeur de BER
+	    	Information<Float> berInfoRZ = new Information<Float>();
 	
 	    	//lancement du simulateur en fonction du nbTest voulu en augmentant le snr à chaque fois avec un pas de freqsnr
 	    	for (int i=0; i<nbTest;i++){
@@ -38,17 +40,39 @@ public class CourbeTEB_MultiTrajets {
 				//pour le signal RZ
 				simu.execute(); //execution du simulateur
 				ber = simu.calculTauxErreurBinaire();//recuperation du BER
-				berInfo.add(ber);
+				berInfoNRZT.add(ber);
+				
+				
+
+		    	String arg2[]={"-ti","1",String.valueOf(dt),"1","-mess",String.valueOf(nbit),"-seed",String.valueOf(seed),"-form","NRZ"};
+				simu = new Simulateur(arg2);
+				
+				//pour le signal RZ
+				simu.execute(); //execution du simulateur
+				ber = simu.calculTauxErreurBinaire();//recuperation du BER
+				berInfoNRZ.add(ber);
+				
+				
+
+		    	String arg3[]={"-ti","1",String.valueOf(dt),"1","-mess",String.valueOf(nbit),"-seed",String.valueOf(seed),"-form","RZ"};
+				simu = new Simulateur(arg3);
+				
+				//pour le signal RZ
+				simu.execute(); //execution du simulateur
+				ber = simu.calculTauxErreurBinaire();//recuperation du BER
+				berInfoRZ.add(ber);
 				dtInfo.add(new Float(dt));
 				
-			
 				dt += freqdt ;
+				
 	    	}
 	    	
 	    	
 	    	
 	    	Graphe graphe = new Graphe("TEB/DT pour "+nbit+" bits");
-			graphe.createDataset("",dtInfo, berInfo);
+			graphe.createDataset("NRZT",dtInfo, berInfoNRZT);
+			graphe.createDataset("NRZ",dtInfo, berInfoNRZ);
+			graphe.createDataset("RZ",dtInfo, berInfoRZ);
 	        JFreeChart chart = graphe.createChart(graphe.dataset,"Decallage (nombre échantillons)","TEB");
 	        ChartPanel chartPanel = new ChartPanel(chart);
 	        chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
