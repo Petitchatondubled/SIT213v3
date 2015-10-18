@@ -69,11 +69,11 @@ public class CourbeTEB_MultiTrajets {
 	    	
 	    	
 	    	
-	    	Graphe graphe = new Graphe("TEB/DT pour "+nbit+" bits");
+	    	Graphe graphe = new Graphe("TEB selon le decallage pour "+nbit+" bits");
 			graphe.createDataset("NRZT",dtInfo, berInfoNRZT);
 			graphe.createDataset("NRZ",dtInfo, berInfoNRZ);
 			graphe.createDataset("RZ",dtInfo, berInfoRZ);
-	        JFreeChart chart = graphe.createChart(graphe.dataset,"Decallage (nombre échantillons)","TEB");
+	        JFreeChart chart = graphe.createChart(graphe.dataset,"Decallage (DT","TEB");
 	        ChartPanel chartPanel = new ChartPanel(chart);
 	        chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
 	        graphe.setContentPane(chartPanel);
