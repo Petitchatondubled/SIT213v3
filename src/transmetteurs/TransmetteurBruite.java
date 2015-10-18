@@ -217,16 +217,6 @@ public class TransmetteurBruite extends Transmetteur<Float, Float> {
 			emettre(); //Emission de l'information bruitee vers le recepteur
 		}
 		
-//		informationRecue = information; //Reception de l'information 
-//		puissanceMoySignalRecu = calculPuissanceMoySignalRecu (informationRecue); //Calcul la puissance moyenne d'informationRecue
-//		if (signalBruiteTrajetMult){
-//			bruitTrajetsMultiples(ar, dt, numTrajet);
-//			emettre();
-//		}else{
-//		bruitBlancGaussien(snr,puissanceMoySignalRecu,seed); //Calcul des échantillons de bruit blanc et l'ajoute au signal �  émettre
-//		emettre(); //Emission de l'information bruitee vers le recepteur
-//		}
-
 	}
 	/**
 	    * Emet l'information bruitee

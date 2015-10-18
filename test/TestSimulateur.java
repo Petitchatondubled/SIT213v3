@@ -71,6 +71,30 @@ public class TestSimulateur {
 		Simulateur simulateur = new Simulateur(args);
 
 	}
+	
+	@Test
+	public void testNumTrajetInvalide() throws ArgumentsException { 
+		thrown.expect(ArgumentsException.class);
+		thrown.expectMessage("Valeur du parametre -ti invalide : le nombre de trajet doit être compris entre 1 et 5");
+		String args[] = {"-ti","0","30","0.3"};
+		Simulateur simulateur = new Simulateur(args);
+	}
+	
+	@Test
+	public void  testTrajetExistant() throws ArgumentsException { 
+		thrown.expect(ArgumentsException.class);
+		thrown.expectMessage("Valeur du parametre -ti invalide : Ce numéro de trajet existe dèjà");
+		String args[] = {"-ti","1","30","0.3","-ti","1","30","0.3"};
+		Simulateur simulateur = new Simulateur(args);
+	}
+	
+	@Test
+	public void  testValAttenuation() throws ArgumentsException { 
+		thrown.expect(ArgumentsException.class);
+		thrown.expectMessage("Valeur du parametre -ti invalide : l'attenuation doitre comprise entre 1 et 0");
+		String args[] = {"-ti","1","30","2"};
+		Simulateur simulateur = new Simulateur(args);
+	}
 	/**
 	 * Classe testant la méthode permettant de calculer le TEB
 	 * Puisque nous utilisons dans cette étape (1) un simulateur parfait, il doit nous renvoyer à chaque fois 0.
@@ -106,7 +130,8 @@ public class TestSimulateur {
 		Simulateur simulateur5= new Simulateur(args5);
 		simulateur5.execute();
 		assertTrue(simulateur5.calculTauxErreurBinaire()<0.0001);
-	}
+		
+		}
 	
 	@Test
 	public void testMain(){
