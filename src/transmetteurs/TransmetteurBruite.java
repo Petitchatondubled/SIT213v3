@@ -80,7 +80,7 @@ public class TransmetteurBruite extends Transmetteur<Float, Float> {
 			sommeEchantillon = sommeEchantillon + (echantillon*echantillon); 
 		}
 		puissanceMoySignalRecu =  sommeEchantillon/informationRecue.nbElements();
-		System.out.println("Puissance moyenne du signal recu :"+ puissanceMoySignalRecu);
+		//System.out.println("Puissance moyenne du signal recu :"+ puissanceMoySignalRecu);
 		return puissanceMoySignalRecu;
 	}
 	
@@ -111,7 +111,7 @@ public class TransmetteurBruite extends Transmetteur<Float, Float> {
 		// Calcul de Pb en fonction du SNR et de Ps
 		puissanceMoyBruit = (float) (10*Math.log10(puissanceMoySignalRecu)-snr);
 		puissanceMoyBruit = (float) Math.pow(10, (puissanceMoyBruit/10));	
-		System.out.println("Puissance moyenne du bruit en fonction de Ps :"+ puissanceMoyBruit);
+		//System.out.println("Puissance moyenne du bruit en fonction de Ps :"+ puissanceMoyBruit);
 		
 		// Boucle : Ajout du bruit calcule a chaque echantillon (voir formule)
 		for (Float echantillon : informationEmise){

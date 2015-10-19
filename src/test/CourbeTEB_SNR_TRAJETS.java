@@ -19,8 +19,8 @@ public class CourbeTEB_SNR_TRAJETS {
 	    	
 	    	
 	    	Simulateur  simu = null;  //simulateur pour la simu
-	    	double nbTest = 100;  //nombre de réalisation (par défaut 100)
-	    	float snr = -80;  //snr de départ (par defaut -20)
+	    	double nbTest = 40;  //nombre de réalisation (par défaut 100)
+	    	float snr = -20;  //snr de départ (par defaut -20)
 	    	float freqsnr = 1f; //Pas du snr (par dedfaut 0.1)
 	    	float ber = 0.0f; 
 	    	int nbit = 10000;  //nombre de bit envoyé
@@ -36,9 +36,9 @@ public class CourbeTEB_SNR_TRAJETS {
 	    	//lancement du simulateur en fonction du nbTest voulu en augmentant le snr à chaque fois avec un pas de freqsnr
 	    	for (int i=0; i<nbTest;i++){
 	    		
-		    	String arg1[]={"-snr",String.valueOf(snr),"-mess",String.valueOf(nbit),"-seed",String.valueOf(seed),"-ti","1","30","1","-form","NRZT"};
-		    	String arg2[]={"-snr",String.valueOf(snr),"-mess",String.valueOf(nbit),"-seed",String.valueOf(seed),"-ti","1","30","1","-form","NRZ"};
-		    	String arg3[]={"-snr",String.valueOf(snr),"-mess",String.valueOf(nbit),"-seed",String.valueOf(seed),"-ti","1","30","1","-form","RZ"};
+		    	String arg1[]={"-snr",String.valueOf(snr),"-mess",String.valueOf(nbit),"-seed",String.valueOf(seed),"-ti","1","30","0.7","-form","NRZT"};
+		    	String arg2[]={"-snr",String.valueOf(snr),"-mess",String.valueOf(nbit),"-seed",String.valueOf(seed),"-ti","1","30","0.7","-form","NRZ"};
+		    	String arg3[]={"-snr",String.valueOf(snr),"-mess",String.valueOf(nbit),"-seed",String.valueOf(seed),"-ti","1","30","0.7","-form","RZ"};
 				simu = new Simulateur(arg1);
 				
 				//pour le signal RZ
@@ -62,6 +62,8 @@ public class CourbeTEB_SNR_TRAJETS {
 				snrInfoNRZT.add(snr);
 				
 				snr= (float) (snr+freqsnr);
+				System.out.println("Calcul | TEB/SNR multi-trajet :"+i+"/"+nbTest);
+
 	    	}
 	    	
 	    	

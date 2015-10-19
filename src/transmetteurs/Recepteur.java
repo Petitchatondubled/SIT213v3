@@ -11,12 +11,12 @@ import information.InformationNonConforme;
  */
 public class Recepteur extends Transmetteur<Float,Boolean>{
 	
-	private int nEchantillon ;
+	private int nEchantillonPerBit ;
 	private float ampMax ;
 	private float ampMin ;
 	private String forme ;
-	private Information<Float> att ;
-	private int dt ;
+	private Information<Float> atteTrajets ;
+	private Information<Integer> deltasTrajets ;
 	private boolean multiTrajets = false ;
 	/**
 	 * Constructeur de la classe Recepteur
@@ -27,7 +27,7 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 	 */
 	public Recepteur(String form,int nEch,float aMax,float aMin){
 		
-		nEchantillon = nEch ;
+		nEchantillonPerBit = nEch ;
 		ampMax = aMax ;
 		ampMin = aMin ;
 		forme = form ;
@@ -35,12 +35,12 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 
 	public Recepteur(String form,int nEch,float aMax,float aMin,Information<Integer> pdt,Information<Float> patt){
 		
-		nEchantillon = nEch ;
+		nEchantillonPerBit = nEch ;
 		ampMax = aMax ;
 		ampMin = aMin ;
 		forme = form ;
-		dt =max(pdt) ;
-		att=patt;
+		deltasTrajets = pdt ;
+		atteTrajets = patt;
 		multiTrajets = true ;
 	}
 	/**
@@ -56,8 +56,7 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 			if(a>=max){
 				max = a ;
 			}
-		}
-		
+		}		
 		return max;
 	}
 	/**
@@ -71,30 +70,49 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 		float sommeEchantillon = 0; //Somme des échantillons sur le temps d'un bit.
 		float moyenneAmplitude = 0;
 		float seuilDecision = (ampMax+ampMin)/2;
-		int nombreEchantillons ;
+		int nEchantillonInformation ;
+		int numBit = 0; //Numero du bit en cours de lecture (en fonction du nombre d'échantillons par bit)
+		int numTrajet = 1;// numero du trajet supplémentaire testé
+		int numConflit1 = 0; //prochain echantillon ou il y aura conflit (trajet1)
 		
-		if(multiTrajets){
+		
+		if(multiTrajets){			
+			nEchantillonInformation = informationRecue.nbElements()-max(deltasTrajets);
+			for (Integer delta : deltasTrajets){ //Pour chaque delta de trajet
+				if(numBit==0){ //Premier Bit lu
+					for(i=0;i<nEchantillonPerBit;i++){ //moyenne amplitude 1er bit
+						sommeEchantillon = sommeEchantillon + informationRecue.iemeElement(i);
+					}
+					if (moyenneAmplitude >= seuilDecision) {  //Au dessus du seuil -> 1
+						//snumConflit1 = 
+					}else if (moyenneAmplitude < seuilDecision){  //En dessous du seuil -> 0
+						
+					}
+				}
+				else{
+					
+				}
+			}
 			
-			nombreEchantillons = informationRecue.nbElements()-dt;
 		}else{
-			nombreEchantillons = informationRecue.nbElements();
+			nEchantillonInformation = informationRecue.nbElements();
 		}
 		
 		
 		
-		while(nombreEchantillons>i){ //tant qu'on a pas lu l'ensemble des échantillons du signal recu
+		while(nEchantillonInformation>i){ //tant qu'on a pas lu l'ensemble des échantillons du signal recu
 			//Calcul de la moyenne d'amplitude sur le temps d'un bit
-			for(j=i;j<i+nEchantillon;j++){  
+			for(j=i;j<i+nEchantillonPerBit;j++){  
 				sommeEchantillon = sommeEchantillon + informationRecue.iemeElement(j);
 			}
-			moyenneAmplitude = sommeEchantillon/nEchantillon;  
+			moyenneAmplitude = sommeEchantillon/nEchantillonPerBit;  
 			
 			if (moyenneAmplitude >= seuilDecision) {  //Au dessus du seuil -> 1
 				informationEmise.add(true); 
 			}else if (moyenneAmplitude < seuilDecision){  //En dessous du seuil -> 0
 				informationEmise.add(false);
 			}
-			i+=nEchantillon ; //on incremente i pour regarder le prochain bit
+			i+=nEchantillonPerBit ; //on incremente i pour regarder le prochain bit
 			moyenneAmplitude = 0;
 			sommeEchantillon = 0;
 		}		
@@ -113,26 +131,26 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 		float sommeEchantillon = 0; //Somme des échantillons sur le temps d'un bit.
 		float moyenneAmplitude = 0;
 		float seuilDecision = (ampMax+ampMin)/2;
-		int nombreEchantillons ;
+		int nEchantillonInformation ;
 		if(multiTrajets){
-			nombreEchantillons = informationRecue.nbElements()-dt;
+			nEchantillonInformation = informationRecue.nbElements()-max(deltasTrajets);
 		}else{
-			nombreEchantillons = informationRecue.nbElements();
+			nEchantillonInformation = informationRecue.nbElements();
 		}
 		 
-		while(nombreEchantillons>i){ //tant qu'on a pas lu l'ensemble des échantillons du signal recu
+		while(nEchantillonInformation>i){ //tant qu'on a pas lu l'ensemble des échantillons du signal recu
 			//Calcul de la moyenne d'amplitude sur 1/3 du temps d'un bit (au milieu car RZ)
-			for(j=i+(nEchantillon/3);j<i+(2*(nEchantillon/3));j++){  
+			for(j=i+(nEchantillonPerBit/3);j<i+(2*(nEchantillonPerBit/3));j++){  
 				sommeEchantillon = sommeEchantillon + informationRecue.iemeElement(j);
 			}
-			moyenneAmplitude = sommeEchantillon/(nEchantillon/3);  
+			moyenneAmplitude = sommeEchantillon/(nEchantillonPerBit/3);  
 						
 			if (moyenneAmplitude >= seuilDecision) {  //Au dessus du seuil -> 1
 				informationEmise.add(true); 
 			}else if (moyenneAmplitude < seuilDecision){ //En dessous du seuil -> 0
 				informationEmise.add(false);
 			}
-			i+=nEchantillon ; //on incremente i pour regarder le prochain bit
+			i+=nEchantillonPerBit ; //on incremente i pour regarder le prochain bit
 			moyenneAmplitude = 0;
 			sommeEchantillon = 0;
 		

@@ -37,7 +37,7 @@ public class CourbeTEB_MultiTrajets {
 		    	String arg1[]={"-ti","1",String.valueOf(dt),"1","-mess",String.valueOf(nbit),"-seed",String.valueOf(seed),"-form","NRZT"};
 				simu = new Simulateur(arg1);
 				
-				//pour le signal RZ
+				//pour le signal NRZT
 				simu.execute(); //execution du simulateur
 				ber = simu.calculTauxErreurBinaire();//recuperation du BER
 				berInfoNRZT.add(ber);
@@ -47,14 +47,14 @@ public class CourbeTEB_MultiTrajets {
 		    	String arg2[]={"-ti","1",String.valueOf(dt),"1","-mess",String.valueOf(nbit),"-seed",String.valueOf(seed),"-form","NRZ"};
 				simu = new Simulateur(arg2);
 				
-				//pour le signal RZ
+				//pour le signal NRZ
 				simu.execute(); //execution du simulateur
 				ber = simu.calculTauxErreurBinaire();//recuperation du BER
 				berInfoNRZ.add(ber);
 				
 				
 
-		    	String arg3[]={"-ti","1",String.valueOf(dt),"1","-mess",String.valueOf(nbit),"-seed",String.valueOf(seed),"-form","RZ"};
+		    	String arg3[]={"-ti","1",String.valueOf(dt),"0.7","-mess",String.valueOf(nbit),"-seed",String.valueOf(seed),"-form","RZ"};
 				simu = new Simulateur(arg3);
 				
 				//pour le signal RZ
@@ -64,6 +64,7 @@ public class CourbeTEB_MultiTrajets {
 				dtInfo.add(new Float(dt));
 				
 				dt += freqdt ;
+				System.out.println("Calcul | TEB/DeltaT multi-trajet :"+i+"/"+nbTest);
 				
 	    	}
 	    	
