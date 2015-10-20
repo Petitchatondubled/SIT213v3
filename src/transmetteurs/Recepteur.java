@@ -15,8 +15,8 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 	private float ampMax ;
 	private float ampMin ;
 	private String forme ;
-	private Information<Float> atteTrajets ;
-	private Information<Integer> deltasTrajets ;
+	private float atteTrajets[] = new float[5] ;
+	private int deltasTrajets[] = new int[5] ;
 	private boolean multiTrajets = false ;
 	/**
 	 * Constructeur de la classe Recepteur
@@ -35,12 +35,20 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 
 	public Recepteur(String form,int nEch,float aMax,float aMin,Information<Integer> pdt,Information<Float> patt){
 		
+		int i=0;
 		nEchantillonPerBit = nEch ;
 		ampMax = aMax ;
 		ampMin = aMin ;
 		forme = form ;
-		deltasTrajets = pdt ;
-		atteTrajets = patt;
+		for(float f:patt){ //mise en tableau attenuations
+			atteTrajets[i]=f;
+			i++;
+		}
+		i=0;
+		for(int f:pdt){ //mise en tableau attenuations
+			deltasTrajets[i]=f;
+			i++;
+		}
 		multiTrajets = true ;
 	}
 	/**
@@ -48,7 +56,7 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 	 * @param info liste de int
 	 * @return le maximum trouvé
 	 */
-	public int max(Information<Integer> info){
+	public int max(int[] info){
 		
 		int max = 0 ;
 		for(int a : info){
@@ -58,6 +66,22 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 			}
 		}		
 		return max;
+	}
+	/**
+	 * Permet de trouver le minimum d'une liste de INT
+	 * @param info liste de int
+	 * @return le min trouvé
+	 */
+	public int min(int[] info){
+		
+		int min = 0 ;
+		for(int a : info){
+			
+			if(a<=min){
+				min = a ;
+			}
+		}		
+		return min;
 	}
 	/**
 	 * Permet de transformer un signal analogique de type NRZ ou NRZT en un signal logique
@@ -71,35 +95,30 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 		float moyenneAmplitude = 0;
 		float seuilDecision = (ampMax+ampMin)/2;
 		int nEchantillonInformation ;
-		int numBit = 0; //Numero du bit en cours de lecture (en fonction du nombre d'échantillons par bit)
-		int numTrajet = 1;// numero du trajet supplémentaire testé
-		int numConflit1 = 0; //prochain echantillon ou il y aura conflit (trajet1)
+		int numTrajet = 0;// numero du trajet supplémentaire testé
+		float valeur = 0;//valeur calculee en fonction d'un echantillon passé en connaissant le delta
 		
 		
-		if(multiTrajets){			
+		if(multiTrajets){
+			int minDelta = min(deltasTrajets); //delta le plus faible
 			nEchantillonInformation = informationRecue.nbElements()-max(deltasTrajets);
-			for (Integer delta : deltasTrajets){ //Pour chaque delta de trajet
-				if(numBit==0){ //Premier Bit lu
-					for(i=0;i<nEchantillonPerBit;i++){ //moyenne amplitude 1er bit
-						sommeEchantillon = sommeEchantillon + informationRecue.iemeElement(i);
+			while(nEchantillonInformation>i){ //tant qu'on a pas lu l'ensemble des échantillons du signal recu
+				if(i>=minDelta){ //Pas de calcul avant delta min
+					numTrajet = 0;
+					for(int delta : deltasTrajets){
+						if(i>=delta){ 
+							valeur = informationRecue.iemeElement(i) - atteTrajets[numTrajet]*informationRecue.iemeElement(i-delta);
+							informationRecue.setIemeElement(i, valeur);
+							numTrajet++;
+						}						
 					}
-					if (moyenneAmplitude >= seuilDecision) {  //Au dessus du seuil -> 1
-						//snumConflit1 = 
-					}else if (moyenneAmplitude < seuilDecision){  //En dessous du seuil -> 0
-						
-					}
-				}
-				else{
-					
-				}
-			}
-			
+					i++;
+				}				
+			}			
 		}else{
 			nEchantillonInformation = informationRecue.nbElements();
 		}
-		
-		
-		
+		i=0;
 		while(nEchantillonInformation>i){ //tant qu'on a pas lu l'ensemble des échantillons du signal recu
 			//Calcul de la moyenne d'amplitude sur le temps d'un bit
 			for(j=i;j<i+nEchantillonPerBit;j++){  
@@ -116,7 +135,6 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 			moyenneAmplitude = 0;
 			sommeEchantillon = 0;
 		}		
-		
 	}
 	
 
@@ -132,12 +150,30 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 		float moyenneAmplitude = 0;
 		float seuilDecision = (ampMax+ampMin)/2;
 		int nEchantillonInformation ;
+		int numTrajet = 0;// numero du trajet supplémentaire testé
+		float valeur = 0;//valeur calculee en fonction d'un echantillon passé en connaissant le delta
+				
+		
 		if(multiTrajets){
+			int minDelta = min(deltasTrajets); //delta le plus faible
 			nEchantillonInformation = informationRecue.nbElements()-max(deltasTrajets);
+			while(nEchantillonInformation>i){ //tant qu'on a pas lu l'ensemble des échantillons du signal recu
+				if(i>=minDelta){ //Pas de calcul avant delta min
+					numTrajet = 0;
+					for(int delta : deltasTrajets){
+						if(i>=delta){ 
+							valeur = informationRecue.iemeElement(i) - atteTrajets[numTrajet]*informationRecue.iemeElement(i-delta);
+							informationRecue.setIemeElement(i, valeur);
+							numTrajet++;
+						}						
+					}
+					i++;
+				}				
+			}			
 		}else{
 			nEchantillonInformation = informationRecue.nbElements();
-		}
-		 
+		}		
+		i=0;
 		while(nEchantillonInformation>i){ //tant qu'on a pas lu l'ensemble des échantillons du signal recu
 			//Calcul de la moyenne d'amplitude sur 1/3 du temps d'un bit (au milieu car RZ)
 			for(j=i+(nEchantillonPerBit/3);j<i+(2*(nEchantillonPerBit/3));j++){  

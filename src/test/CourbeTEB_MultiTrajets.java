@@ -19,7 +19,7 @@ public class CourbeTEB_MultiTrajets {
 	    	
 	    	
 	    	Simulateur  simu = null;  //simulateur pour la simu
-	    	double nbTest = 100;  //nombre de réalisation (par défaut 100)
+	    	double nbTest = 150;  //nombre de réalisation (par défaut 100)
 	    	int dt = 0 ;  //snr de départ (par defaut -20)
 	    	int freqdt = 1; //Pas du snr (par dedfaut 0.1)
 	    	float ber = 0.0f; 
@@ -34,7 +34,7 @@ public class CourbeTEB_MultiTrajets {
 	    	//lancement du simulateur en fonction du nbTest voulu en augmentant le snr à chaque fois avec un pas de freqsnr
 	    	for (int i=0; i<nbTest;i++){
 	    		
-		    	String arg1[]={"-ti","1",String.valueOf(dt),"1","-mess",String.valueOf(nbit),"-seed",String.valueOf(seed),"-form","NRZT"};
+		    	String arg1[]={"-ti","1",String.valueOf(dt),"0.7","-ti","2","30","0.7","-mess",String.valueOf(nbit),"-seed",String.valueOf(seed),"-form","NRZ"};
 				simu = new Simulateur(arg1);
 				
 				//pour le signal NRZT
