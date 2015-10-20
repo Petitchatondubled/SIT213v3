@@ -3,6 +3,7 @@ package transmetteurs;
 import destinations.DestinationInterface;
 import information.Information;
 import information.InformationNonConforme;
+import visualisations.SondeAnalogique;
 
 /**
  * Classe permettant de transformer un signal analogique en un signal logique
@@ -18,6 +19,7 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 	private float atteTrajets[] = new float[5] ;
 	private int deltasTrajets[] = new int[5] ;
 	private boolean multiTrajets = false ;
+	 SondeAnalogique sonde = new SondeAnalogique("Signal reconstitué") ;
 	/**
 	 * Constructeur de la classe Recepteur
 	 * @param form forme du signal analogique
@@ -74,13 +76,14 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 	 */
 	public int min(int[] info){
 		
-		int min = 0 ;
+		int min = info[0] ;
 		for(int a : info){
 			
-			if(a<=min){
+			if(a<=min && a!=0){
 				min = a ;
 			}
 		}		
+
 		return min;
 	}
 	/**
@@ -101,6 +104,7 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 		
 		if(multiTrajets){
 			int minDelta = min(deltasTrajets); //delta le plus faible
+		
 			nEchantillonInformation = informationRecue.nbElements()-max(deltasTrajets);
 			while(nEchantillonInformation>i){ //tant qu'on a pas lu l'ensemble des échantillons du signal recu
 				if(i>=minDelta){ //Pas de calcul avant delta min
@@ -112,9 +116,11 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 							numTrajet++;
 						}						
 					}
-					i++;
-				}				
-			}			
+				}			
+				i++;
+			}	
+			sonde.recevoir(informationRecue);
+		
 		}else{
 			nEchantillonInformation = informationRecue.nbElements();
 		}
@@ -134,7 +140,8 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 			i+=nEchantillonPerBit ; //on incremente i pour regarder le prochain bit
 			moyenneAmplitude = 0;
 			sommeEchantillon = 0;
-		}		
+		}
+		
 	}
 	
 
@@ -167,8 +174,8 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 							numTrajet++;
 						}						
 					}
-					i++;
-				}				
+				}
+				i++;
 			}			
 		}else{
 			nEchantillonInformation = informationRecue.nbElements();
