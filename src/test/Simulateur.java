@@ -50,6 +50,8 @@ import java.io.PrintWriter;
       private boolean messageAnalogique = false ;
    /** Rapport signal sur bruit desire dans le transmetteur, valeur par defaut : 0.0f*/
    private boolean signalBruite = false ;
+   /** Indique si le simulateur utilise un transducteur */
+   private          boolean transducteur = false;
    /** Rapport signal sur bruit desire dans le transmetteur, valeur par defaut : 0.0f*/
    private float snr = 0.0f ;
    
@@ -70,7 +72,10 @@ import java.io.PrintWriter;
       private			  Transmetteur <Float, Float>  transmetteurAnalogique = null;
    /** le  composant Destination de la chaine de transmission */
       private			  Destination <Boolean>  destination = null;
-   	
+    /** le  composant Transducteur Emission de la chaine de transmission */
+      private			  Transmetteur <Boolean,Boolean>  codeur = null;
+    /** le  composant Transducteur de r�ception de la chaine de transmission */
+      private			  Transmetteur <Boolean,Boolean>  decodeur = null;
    
    /** Le constructeur de Simulateur construit une chaine de transmission composee d'une Source Boolean, d'une Destination Boolean et de Transmetteur(s) [voir la m�thode analyseArguments]...  
    * <br> Les diff�rents composants de la cha�ne de transmission (Source, Transmetteur(s), Destination, Sonde(s) de visualisation) sont crees et connect�s.
@@ -221,6 +226,9 @@ import java.io.PrintWriter;
         		ar.add(attenuation);
         	
               } 
+            else if (args[i].matches("-transducteur")){ //utilisation d'un transducteur
+            	transducteur = true;
+            }
             else throw new ArgumentsException("Option invalide :"+ args[i]); // Si aucun argument ne correspond �  ceux définis
 
           
@@ -235,7 +243,12 @@ import java.io.PrintWriter;
    *
    */ 
       public void execute() throws Exception {
-    	  
+    	  //Sonde des transcodeurs
+    	  SondeLogique sondeCodeur = new SondeLogique("sonde_Codeur",50);
+          SondeLogique sondeDecodeur = new SondeLogique("sonde_Decodeur",50);
+          codeur = new Codeur();
+          decodeur = new Decodeur();
+  		  
     	 
     	 if(messageAnalogique){ //si c'est un signal analogique qu'on souhaite simuler
     		 if(messageAleatoire){ //si c'est une donne aleatoire qu'on souhaite avoir
@@ -253,6 +266,7 @@ import java.io.PrintWriter;
          	 SondeLogique sondeLogique2 = new SondeLogique("Sonde_Logique_sortie", 50);
          	 SondeAnalogique sondeAnalogique1 = new SondeAnalogique("Sonde_analogique_entree") ;
          	 SondeAnalogique sondeAnalogique2 = new SondeAnalogique("Sonde_analogique_sortie") ;
+          
          	 
          	 //creation de l'emetteur, indication des parametres de transformation
     		 Emetteur emetteur = new Emetteur(forme, nbEch, amplMax, amplMin) ;
@@ -296,12 +310,25 @@ import java.io.PrintWriter;
     			 emetteur.connecter(sondeAnalogique1);
     			 transmetteurAnalogique.connecter(sondeAnalogique2);
     			 recepteur.connecter(sondeLogique2);
+    			 if(transducteur){
+    				 codeur.connecter(sondeCodeur);
+    				 decodeur.connecter(sondeDecodeur);
+    			 }
     		 }
     		 //execution des elements de la chaine de transmission
+    		 if(transducteur){
+         		source.connecter(codeur);
+          		codeur.connecter(emetteur);
+          		emetteur.connecter(transmetteurAnalogique);
+          		transmetteurAnalogique.connecter(recepteur);
+          		recepteur.connecter(decodeur);
+          		decodeur.connecter(destination); 
+         	}
+    		 else{
     		 source.connecter(emetteur);
     		 emetteur.connecter(transmetteurAnalogique);
     		 transmetteurAnalogique.connecter(recepteur);
-    		 recepteur.connecter(destination);
+    		 recepteur.connecter(destination);}
     		 source.emettre();
     		 
     	 }else if(!messageAleatoire){ //Si c'est pas analogique 
@@ -309,15 +336,31 @@ import java.io.PrintWriter;
         	
         	SondeLogique sondeLogique1 = new SondeLogique("sondeDataEmis",50);
         	SondeLogique sondeLogique2 = new SondeLogique("sondeDataRecus",50);
+        
         		
         	transmetteurLogique = new TransmetteurParfait() ;
         	destination = new DestinationFinale() ;
         	
+        	if(transducteur){
+        		source.connecter(codeur);
+         		codeur.connecter(transmetteurLogique);
+         		transmetteurLogique.connecter(decodeur);
+         		decodeur.connecter(destination); 
+        	}
+        	else{
+        		source.connecter(transmetteurLogique); //Connexion de la source et du transmetteur
+        		transmetteurLogique.connecter(destination); //Connexion du transmetteur et de la destination finale
+        	}
+        	if(affichage)
+        		{
+        		source.connecter(sondeLogique1); // affichage des sondes si souhaité par l'utilisateur
+        		 if(transducteur){
+    				 codeur.connecter(sondeCodeur);
+    				 decodeur.connecter(sondeDecodeur);
+    			 }
+        		}
         	
-        	source.connecter(transmetteurLogique); //Connexion de la source et du transmetteur
-        	if(affichage) source.connecter(sondeLogique1); // affichage des sondes si souhaité par l'utilisateur
         	
-        	transmetteurLogique.connecter(destination); //Connexion du transmetteur et de la destination finale
         	if(affichage) transmetteurLogique.connecter(sondeLogique2); // affichage des sondes si souhaité par l'utilisateur
       
         	source.emettre(); // on emet le signal
@@ -336,13 +379,24 @@ import java.io.PrintWriter;
          	transmetteurLogique = new TransmetteurParfait() ;
          	destination = new DestinationFinale() ;
          	
-         	
-         	source.connecter(transmetteurLogique); //Connexion de la source et du transmetteur
-         	if(affichage) source.connecter(sondeLogique1); // affichage des sondes si souhaité par l'utilisateur
-         	
-         	transmetteurLogique.connecter(destination); //Connexion du transmetteur et de la destination finale
-         	if(affichage) transmetteurLogique.connecter(sondeLogique2); // affichage des sondes si souhaité par l'utilisateur
-       
+         	if(transducteur){
+         		source.connecter(codeur);
+         		codeur.connecter(transmetteurLogique);
+         		transmetteurLogique.connecter(decodeur);
+         		decodeur.connecter(destination);
+         	}else {
+         		source.connecter(transmetteurLogique); //Connexion de la source et du transmetteur
+         		transmetteurLogique.connecter(destination); //Connexion du transmetteur et de la destination finale
+         	}
+         	if(affichage) 
+         		{
+         		source.connecter(sondeLogique1); // affichage des sondes si souhaité par l'utilisateur
+         		transmetteurLogique.connecter(sondeLogique2); // affichage des sondes si souhaité par l'utilisateur
+         		 if(transducteur){
+    				 codeur.connecter(sondeCodeur);
+    				 decodeur.connecter(sondeDecodeur);
+    			 }
+         		}  
          	source.emettre(); // on emet le signal
          }
         		 
