@@ -19,11 +19,11 @@ public class courbeTEB {
 	    	
 	    	
 	    	Simulateur  simu = null;  //simulateur pour la simu
-	    	double nbTest = 100;  //nombre de réalisation (par défaut 100)
-	    	float snr = -80;  //snr de départ (par defaut -20)
+	    	double nbTest = 40;  //nombre de réalisation (par défaut 100)
+	    	float snr = -20;  //snr de départ (par defaut -20)
 	    	float freqsnr = 1f; //Pas du snr (par dedfaut 0.1)
 	    	float ber = 0.0f; 
-	    	int nbit = 10000;  //nombre de bit envoyé
+	    	int nbit = 1000;  //nombre de bit envoyé
 	    	int seed = 5;  //germe utilisé pour avoir le même msg aleatoire à chaque fois
 	    	
 	    	Information<Float> berInfo = new Information<Float>(); //information contenant les valeur de BER

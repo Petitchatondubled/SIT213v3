@@ -19,7 +19,7 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 	private float atteTrajets[] = new float[5] ;
 	private int deltasTrajets[] = new int[5] ;
 	private boolean multiTrajets = false ;
-	 SondeAnalogique sonde = new SondeAnalogique("Signal reconstitué") ;
+	SondeAnalogique sonde = new SondeAnalogique("Signal reconstitué") ;
 	/**
 	 * Constructeur de la classe Recepteur
 	 * @param form forme du signal analogique
@@ -108,13 +108,13 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 			nEchantillonInformation = informationRecue.nbElements()-max(deltasTrajets);
 			while(nEchantillonInformation>i){ //tant qu'on a pas lu l'ensemble des échantillons du signal recu
 				if(i>=minDelta){ //Pas de calcul avant delta min
-					numTrajet = 0;
+					numTrajet = 0; 
 					for(int delta : deltasTrajets){
 						if(i>=delta){ 
 							valeur = informationRecue.iemeElement(i) - atteTrajets[numTrajet]*informationRecue.iemeElement(i-delta);
 							informationRecue.setIemeElement(i, valeur);
-							numTrajet++;
-						}						
+						}	
+						numTrajet++;
 					}
 				}			
 				i++;
@@ -171,12 +171,13 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 						if(i>=delta){ 
 							valeur = informationRecue.iemeElement(i) - atteTrajets[numTrajet]*informationRecue.iemeElement(i-delta);
 							informationRecue.setIemeElement(i, valeur);
-							numTrajet++;
-						}						
+						}	
+						numTrajet++;
 					}
 				}
 				i++;
-			}			
+			}
+			sonde.recevoir(informationRecue);
 		}else{
 			nEchantillonInformation = informationRecue.nbElements();
 		}		
