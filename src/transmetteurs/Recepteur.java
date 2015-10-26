@@ -4,6 +4,7 @@ import destinations.DestinationInterface;
 import information.Information;
 import information.InformationNonConforme;
 import visualisations.SondeAnalogique;
+import visualisations.SondeEyeDiagramm;
 
 /**
  * Classe permettant de transformer un signal analogique en un signal logique
@@ -19,7 +20,7 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 	private float atteTrajets[] = new float[5] ;
 	private int deltasTrajets[] = new int[5] ;
 	private boolean multiTrajets = false ;
-	SondeAnalogique sonde = new SondeAnalogique("Signal reconstitué") ;
+	SondeAnalogique sonde = new SondeAnalogique("Signal reconstitué") ;	
 	/**
 	 * Constructeur de la classe Recepteur
 	 * @param form forme du signal analogique
@@ -210,6 +211,8 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 			throws InformationNonConforme {
 		informationRecue = information; //on sauvegarde la donnée recue
 		informationEmise = new Information<Boolean>();
+		SondeEyeDiagramm sondeEye = new SondeEyeDiagramm("Diagramme de l'oeil",nEchantillonPerBit) ;
+		sondeEye.recevoir(informationRecue);
 		switch(forme){ //Switch pour adapter le bon traitement voulu par l'utilisateur
 		
 			case "RZ" : this.decodeurRZ();
