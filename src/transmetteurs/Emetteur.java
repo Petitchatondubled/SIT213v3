@@ -133,7 +133,11 @@ public class Emetteur extends Transmetteur<Boolean,Float>{
 		
 		
 	}
-
+	/**
+	    * Recoit l'information des sources
+	    * @param information information recue
+	    * @throws InformationNonConforme Information non conforme
+	    */
 	@Override
 	public void recevoir(Information<Boolean> information)
 			throws InformationNonConforme {
@@ -153,7 +157,10 @@ public class Emetteur extends Transmetteur<Boolean,Float>{
 	}
 	
 	
-
+	/**
+	    * Emet l'information vers la ou les destination(s)
+	    * @throws InformationNonConforme Information non conforme
+	    */
 	@Override
 	public void emettre() throws InformationNonConforme {
 		for (DestinationInterface<Float> destinationConnectee : destinationsConnectees) { //On recupere toutes les destinations auxquelles est connectée notre instance

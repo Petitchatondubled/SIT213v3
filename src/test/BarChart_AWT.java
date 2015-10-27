@@ -14,7 +14,9 @@ import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset; 
 import org.jfree.ui.ApplicationFrame; 
 import org.jfree.ui.RefineryUtilities; 
-
+/*
+ * Classe utilisée pour l'affichage d'histogramme
+ */
 public class BarChart_AWT extends ApplicationFrame
 {
    public BarChart_AWT( String applicationTitle , String chartTitle, Information<Float> info )
@@ -40,8 +42,13 @@ public class BarChart_AWT extends ApplicationFrame
    private CategoryDataset createDataset(Information<Float> infoRecue )
    {
       final String bar = "Bruit généré";
+    /*stockage des valeurs dans un tableau, selon l'intervalle où ils sont placé
+     * on utilise un pas de 0.1 donc [10] représente [0.0,0.1,0.2...1.0]
+     * [2] représente la partie négative(0) et positive(1)
+     */
       double[][][] val = new double[1000000][10][2];
       int compteur=0;
+      //initialisation des valeurs à 0
       for (int i=0;i<val.length;i++)
       { 
     	  for(int j=0;j<10;j++) for(int h=0;h<2;h++)val[i][j][h]=0;
@@ -49,6 +56,11 @@ public class BarChart_AWT extends ApplicationFrame
       final DefaultCategoryDataset dataset = new DefaultCategoryDataset();  
       
       float temp = 0.0f;
+      /* Pour chaque infoRecue
+       * nous vérifiant si il est positif ou négatif 
+       * Puis on regarde combien de 0.1 pas il fait comparer à son int arrondi
+       * Il sera ensuite stocker dans la variable val avec les indices correspondants
+       */
       for(Float test:infoRecue)
       {
     	temp = test;

@@ -50,16 +50,17 @@ import java.io.PrintWriter;
       private boolean messageAnalogique = false ;
    /** Rapport signal sur bruit desire dans le transmetteur, valeur par defaut : 0.0f*/
    private boolean signalBruite = false ;
+   /**Attribut pour le signal bruité reel*/
+   private boolean signalBruiteTrajetsMult = false;
    /** Indique si le simulateur utilise un transducteur */
    private          boolean transducteur = false;
    /** Rapport signal sur bruit desire dans le transmetteur, valeur par defaut : 0.0f*/
    private float snr = 0.0f ;
    
-   //Attribut pour le signal bruité reel
-   private boolean signalBruiteTrajetsMult = false;
+   
    private Information<Integer> numTraj = new Information<Integer>(); //nombre de trajectoires souhaités
-   private Information<Integer> dt = new Information<Integer>() ;
-   private Information<Float> ar = new Information<Float>() ;
+   private Information<Integer> dt = new Information<Integer>() ;//décalage des trajets multiples
+   private Information<Float> ar = new Information<Float>() ; //attenuation des trajets multiples
    
 
    

@@ -6,7 +6,7 @@
 
 /** 
  * Classe réalisant l'affichage du diagramme de l'oeil pour le signal reçu par le recepteur
- * @author prou
+ * @author Moal Jordan
  */
    public class SondeEyeDiagramm extends Sonde <Float> {
           

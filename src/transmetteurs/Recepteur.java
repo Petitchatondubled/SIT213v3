@@ -205,6 +205,8 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 
 	/**
 	    * Recoit l'information du transmetteur
+	    * @param information information recue
+	    * @throws InformationNonConforme Information non conforme
 	    */
 	@Override
 	public void recevoir(Information<Float> information)
@@ -232,6 +234,7 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 	}
 	/**
 	    * Emet l'information vers la ou les destination(s)
+	    * @throws InformationNonConforme Information non conforme
 	    */
 	@Override
 	public void emettre() throws InformationNonConforme {

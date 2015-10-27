@@ -14,7 +14,9 @@ public class histogramm {
               }
 
      		
-   	
+   	/**
+   	 *Classe exécuté pour le calcule de l'histogramme du bruit gaussien 
+   	 */
 
      public static void main(final String[] args) {
     	  	  Information<Float> bruitATraiter = new Information<Float>();
@@ -38,7 +40,7 @@ public class histogramm {
 		   			 System.out.println(echantillonBruit);
 			}
 
-	              BarChart_AWT chart = new BarChart_AWT("Vérification du bruit", "Histogramme",bruitATraiter);//création de la fenêtre
+	          BarChart_AWT chart = new BarChart_AWT("Vérification du bruit", "Histogramme",bruitATraiter);//création de la fenêtre
 		      chart.pack( );        
 		      RefineryUtilities.centerFrameOnScreen( chart );        
 		      chart.setVisible( true ); //Affichage

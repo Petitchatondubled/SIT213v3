@@ -87,6 +87,7 @@ package transmetteurs;
    
     /**
     * émet l'information construite par le transmetteur  
+    * @throws InformationNonConforme Information non conforme
     */
       public  abstract void emettre() throws InformationNonConforme;   
    }

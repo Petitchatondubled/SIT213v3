@@ -25,9 +25,9 @@ public class TransmetteurBruite extends Transmetteur<Float, Float> {
 		this.snr = snr;
 		signalBruite = true ;
 	}
-	//Constructeur pour utiliser un bruit à trajets multiples
+
 	/**
-	 * Constructeur de la classe Transmetteur bruiteavec seed
+	 * Constructeur de la classe Transmetteur bruite avec seed
 	 * @param snr rapport signal sur bruit voulu pour ce transmetteur
 	 * @param seed germe de random
 	 */
@@ -39,6 +39,15 @@ public class TransmetteurBruite extends Transmetteur<Float, Float> {
 		signalBruite = true ;
 	}
 	
+	/**
+	 * Constructeur de la classe Transmetteur bruite avec trajet multiple et seed
+	 * @param snr rapport signal sur bruit voulu pour ce transmetteur
+	 * @param seed germe de random
+	 * @param numTraj numero du trajet multiple
+	 * @param dt decalage du trajet multiple
+	 * @param ar attenuation du trajet multiple 
+	 */
+	
 	public TransmetteurBruite(float snr, Integer seed, Information<Integer> numTraj, Information<Integer> dt,Information<Float> ar) {
 		
 		this.signalBruiteTrajetMult = true ;
@@ -49,6 +58,13 @@ public class TransmetteurBruite extends Transmetteur<Float, Float> {
 		this.seed = seed;
 		signalBruite = true ;
 	}
+	/**
+	 * Constructeur de la classe Transmetteur bruite avec trajet multiple 
+	 * @param snr rapport signal sur bruit voulu pour ce transmetteur
+	 * @param numTraj numero du trajet multiple
+	 * @param dt decalage du trajet multiple
+	 * @param ar attenuation du trajet multiple 
+	 */
 	public TransmetteurBruite(float snr,Information<Integer> numTraj, Information<Integer> dt,Information<Float> ar) {
 		
 		this.signalBruiteTrajetMult = true ;
@@ -59,6 +75,12 @@ public class TransmetteurBruite extends Transmetteur<Float, Float> {
 		signalBruite = true ;
 		
 	}
+	/**
+	 * Constructeur de la classe Transmetteur avec trajet multiple 
+	 * @param numTraj numero du trajet multiple
+	 * @param dt decalage du trajet multiple
+	 * @param ar attenuation du trajet multiple 
+	 */
 	public TransmetteurBruite(Information<Integer> numTraj, Information<Integer> dt,Information<Float> ar) {
 		this.signalBruiteTrajetMult = true ;
 		this.ar=ar;
@@ -80,7 +102,6 @@ public class TransmetteurBruite extends Transmetteur<Float, Float> {
 			sommeEchantillon = sommeEchantillon + (echantillon*echantillon); 
 		}
 		puissanceMoySignalRecu =  sommeEchantillon/informationRecue.nbElements();
-		//System.out.println("Puissance moyenne du signal recu :"+ puissanceMoySignalRecu);
 		return puissanceMoySignalRecu;
 	}
 	
@@ -220,6 +241,7 @@ public class TransmetteurBruite extends Transmetteur<Float, Float> {
 	}
 	/**
 	    * Emet l'information bruitee
+	    * @throws InformationNonConforme information non conforme
 	    */
 	@Override
 	public void emettre() throws InformationNonConforme {

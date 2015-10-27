@@ -7,7 +7,10 @@ import information.InformationNonConforme;
 public class Decodeur extends Transmetteur<Boolean, Boolean> {
 
 	
-	
+	/**
+	 * Decodage en ligne information logiques reçues 
+	 * @throws InformationNonConforme 
+	 */
 	public void decodage() throws InformationNonConforme
 	{
 		int i = 0;
