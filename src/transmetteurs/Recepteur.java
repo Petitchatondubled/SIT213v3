@@ -36,24 +36,34 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 		forme = form ;
 	}
 
-	public Recepteur(String form,int nEch,float aMax,float aMin,Information<Integer> pdt,Information<Float> patt){
+	/**
+	 * Constructeur de la classe Recepteur
+	 * @param form forme du signal analogique
+	 * @param nEch nombre d'échantillon pour ce signal
+	 * @param aMax Amplitude maximum du signal
+	 * @param aMin Amplitude minimum du signal
+	 * @param dt Decalage du trajet multiple
+	 * @param at Attenuation du trajet multiple
+	 */
+	public Recepteur(String form,int nEch,float aMax,float aMin,Information<Integer> dt,Information<Float> at){
 		
 		int i=0;
 		nEchantillonPerBit = nEch ;
 		ampMax = aMax ;
 		ampMin = aMin ;
 		forme = form ;
-		for(float f:patt){ //mise en tableau attenuations
+		for(float f:at){ //mise en tableau attenuations
 			atteTrajets[i]=f;
 			i++;
 		}
 		i=0;
-		for(int f:pdt){ //mise en tableau attenuations
+		for(int f:dt){ //mise en tableau attenuations
 			deltasTrajets[i]=f;
 			i++;
 		}
 		multiTrajets = true ;
 	}
+	
 	/**
 	 * Permet de trouver le maximum d'une liste de INT
 	 * @param info liste de int
