@@ -115,7 +115,7 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 		
 		if(multiTrajets){
 			int minDelta = min(deltasTrajets); //delta le plus faible
-		
+					
 			nEchantillonInformation = informationRecue.nbElements()-max(deltasTrajets);
 			while(nEchantillonInformation>i){ //tant qu'on a pas lu l'ensemble des échantillons du signal recu
 				if(i>=minDelta){ //Pas de calcul avant delta min
@@ -127,7 +127,13 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 						}	
 						numTrajet++;
 					}
-				}			
+				}							
+				if(valeur<=ampMin){   //Si à la fin du for on calcul une valeur inferieur a ampMin on arondie
+					informationRecue.setIemeElement(i, ampMin);
+				}
+				if(valeur>=ampMax){   //Si à la fin du for on calcul une valeur inferieur a ampMax on arondie
+					informationRecue.setIemeElement(i, ampMax);
+				}
 				i++;
 			}	
 			sonde.recevoir(informationRecue);
@@ -186,6 +192,12 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 						numTrajet++;
 					}
 				}
+				if(valeur<=ampMin){   //Si à la fin du for on calcul une valeur inferieur a ampMin on arondie
+					informationRecue.setIemeElement(i, ampMin);
+				}
+				if(valeur>=ampMax){   //Si à la fin du for on calcul une valeur inferieur a ampMax on arondie
+					informationRecue.setIemeElement(i, ampMax);
+				}
 				i++;
 			}
 			sonde.recevoir(informationRecue);
@@ -224,7 +236,7 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 		informationRecue = information; //on sauvegarde la donnée recue
 		informationEmise = new Information<Boolean>();
 		SondeEyeDiagramm sondeEye = new SondeEyeDiagramm("Diagramme de l'oeil",nEchantillonPerBit) ;
-		sondeEye.recevoir(informationRecue);
+		//sondeEye.recevoir(informationRecue);
 		switch(forme){ //Switch pour adapter le bon traitement voulu par l'utilisateur
 		
 			case "RZ" : this.decodeurRZ();

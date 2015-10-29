@@ -245,8 +245,8 @@ import java.io.PrintWriter;
    */ 
       public void execute() throws Exception {
     	  //Sonde des transcodeurs
-    	  SondeLogique sondeCodeur = new SondeLogique("sonde_Codeur",50);
-          SondeLogique sondeDecodeur = new SondeLogique("sonde_Decodeur",50);
+    	  SondeLogique sondeCodeur = new SondeLogique("sonde_log_Codeur",50);
+          SondeLogique sondeDecodeur = new SondeLogique("sonde_log_Decodeur",50);
           codeur = new Codeur();
           decodeur = new Decodeur();
   		  
@@ -263,10 +263,10 @@ import java.io.PrintWriter;
     		 }
     		 
     		 //Creation de 4 sondes pour bien suivre et observer l'integrite des donnees
-         	 SondeLogique sondeLogique1 = new SondeLogique("sonde_Logique_entree",50);
-         	 SondeLogique sondeLogique2 = new SondeLogique("Sonde_Logique_sortie", 50);
-         	 SondeAnalogique sondeAnalogique1 = new SondeAnalogique("Sonde_analogique_entree") ;
-         	 SondeAnalogique sondeAnalogique2 = new SondeAnalogique("Sonde_analogique_sortie") ;
+         	 SondeLogique sondeLogique1 = new SondeLogique("sonde_log_Source",50);
+         	 SondeLogique sondeLogique2 = new SondeLogique("Sonde_log_Sortie_Recepteur", 50);
+         	 SondeAnalogique sondeAnalogique1 = new SondeAnalogique("Sonde_Sortie_Emetteur") ;
+         	 SondeAnalogique sondeAnalogique2 = new SondeAnalogique("Sonde_Entree_Recepteur") ;
           
          	 
          	 //creation de l'emetteur, indication des parametres de transformation
