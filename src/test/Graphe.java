@@ -11,6 +11,8 @@ import java.awt.geom.Rectangle2D;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.LogAxis;
+import org.jfree.chart.axis.LogarithmicAxis;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.DefaultDrawingSupplier;
 import org.jfree.chart.plot.DrawingSupplier;
@@ -55,7 +57,7 @@ public class Graphe extends ApplicationFrame {
         final XYSeries series1 = new XYSeries(name);
         
         for(int i=0;i<xInfo.nbElements();i++){
-        	series1.add(xInfo.iemeElement(i), yInfo.iemeElement(i));
+        	series1.add(xInfo.iemeElement(i),yInfo.iemeElement(i));
         }
         dataset.addSeries(series1);
         
@@ -102,10 +104,15 @@ public class Graphe extends ApplicationFrame {
             shapes
         );
      
-       supplier.getNextShape();
-       supplier.getNextShape();
+        supplier.getNextShape();
+        supplier.getNextShape();
+        final NumberAxis domainAxis = new NumberAxis("SNR (en dB)");
+        final LogAxis rangeAxis = new LogAxis("Log10(TEB)");
+        rangeAxis.setBase(10);
+        rangeAxis.setSmallestValue(0.00001);
+        plot.setDomainAxis(domainAxis);
+        plot.setRangeAxis(rangeAxis);
         plot.setBackgroundPaint(Color.lightGray);
-    //    plot.setAxisOffset(new Spacer(Spacer.ABSOLUTE, 5.0, 5.0, 5.0, 5.0));
         plot.setDomainGridlinePaint(Color.white);
         plot.setRangeGridlinePaint(Color.white);
         plot.setDrawingSupplier(supplier);

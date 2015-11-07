@@ -19,12 +19,12 @@ public class CourbeTEB_SNRclassic {
 	    	
 	    	
 	    	Simulateur  simu = null;  //simulateur pour la simu
-	    	double nbTest = 100;  //nombre de réalisation (par défaut 100)
-	    	float snr = -25;  //snr de départ (par defaut -20)
-	    	float freqsnr = 0.5f; //Pas du snr (par dedfaut 0.1)
+	    	double nbTest = 50;  //nombre de réalisation (par défaut 100)
+	    	float snr = -70f;  //snr de départ (par defaut -20)
+	    	float freqsnr = 1f; //Pas du snr (par dedfaut 0.1)
 	    	float ber = 0.0f; 
-	    	int nbit = 100000;  //nombre de bit envoyé
-	    	int nEch = 60;   //nombre ech par bit
+	    	int nbit = 50000;  //nombre de bit envoyé
+	    	int nEch = 30;   //nombre ech par bit
 	    	int seed = 5;  //germe utilisé pour avoir le même msg aleatoire à chaque fois
 	    	
 	    	Information<Float> berInfo = new Information<Float>(); //information contenant les valeur de BER
@@ -74,7 +74,7 @@ public class CourbeTEB_SNRclassic {
 			graphe.createDataset("RZ",snrInfo, berInfo);
 			graphe.createDataset("NRZ",snrInfoNRZ, berInfoNRZ);
 			graphe.createDataset("NRZT",snrInfoNRZT, berInfoNRZT);
-	        JFreeChart chart = graphe.createChart(graphe.dataset,"SNR (dB)","TEB");
+	        JFreeChart chart = graphe.createChart(graphe.dataset,"SNR (dB)","10 TEB");
 	        ChartPanel chartPanel = new ChartPanel(chart);
 	        chartPanel.setPreferredSize(new java.awt.Dimension(600, 370));
 	        graphe.setContentPane(chartPanel);

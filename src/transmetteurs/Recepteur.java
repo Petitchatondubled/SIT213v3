@@ -136,7 +136,7 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 				}
 				i++;
 			}	
-			sonde.recevoir(informationRecue);
+			//sonde.recevoir(informationRecue);
 		
 		}else{
 			nEchantillonInformation = informationRecue.nbElements();
@@ -200,7 +200,7 @@ public class Recepteur extends Transmetteur<Float,Boolean>{
 				}
 				i++;
 			}
-			sonde.recevoir(informationRecue);
+			//sonde.recevoir(informationRecue);
 		}else{
 			nEchantillonInformation = informationRecue.nbElements();
 		}		
